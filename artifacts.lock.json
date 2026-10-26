@@ -5,7 +5,7 @@
     {
       "path": "artifacts/backend/TimoxVirtualAsioEngine.exe",
       "repository": "TimoxVAudioEngine",
-      "revision": "working-tree-manifest-sha256:ef63f88337b41713f6a1dc4945a0ea6e765415ea1d56c790f9f98fd89c43a653",
+      "revision": "working-tree-manifest-sha256:47f168f497b64a38ab6858a10355b2ce102cf432c2166ed540b55f601ac2a60d",
       "sha256": "6cda07b551b1235264993281ffadf769fbdc04711b0f586751ccfe319045e29d",
       "sourcePath": "build/Release/TimoxVirtualAsioEngine.exe",
       "sourceLastWriteTimeUtc": "2026-10-26T18:47:18.794Z",
@@ -14,7 +14,7 @@
     {
       "path": "artifacts/backend/PwarAsioClient.exe",
       "repository": "Timox-Pwar",
-      "revision": "working-tree-manifest-sha256:574558267b45a24e65ac823e9a6c34d0c6050e54e160572524dd2db25df5ae01",
+      "revision": "working-tree-manifest-sha256:373ca06cbbd9c3b6f44ff11782a23043281dc086723434712718bf3f2e554f98",
       "sha256": "29d5e3208e10ae5febbb7fd3914790a87eaf12d32be6bef923f20d7e33566fd3",
       "sourcePath": "build/Release/PwarAsioClient.exe",
       "sourceLastWriteTimeUtc": "2026-10-26T18:40:42.386Z",

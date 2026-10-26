@@ -46,8 +46,8 @@
       "source": null,
       "target": "artifacts.lock.json",
       "sourceSha256": null,
-      "sha256": "b95944c2c68972887378040f5b682774510f0fc26e076770fd9465e9913aeb9e",
-      "targetSha256": "b95944c2c68972887378040f5b682774510f0fc26e076770fd9465e9913aeb9e",
+      "sha256": "b32daad957698728db491f4614836523d77fb832b2eeb9f8fcd32e415988ee30",
+      "targetSha256": "b32daad957698728db491f4614836523d77fb832b2eeb9f8fcd32e415988ee30",
       "transformation": "created for extraction"
     },
     {
@@ -198,8 +198,8 @@
       "source": null,
       "target": "MIGRATION.md",
       "sourceSha256": null,
-      "sha256": "e1d201f71a91a9fdaf6ac678c0590347b0848733e0153268b2fe2b234fb122c5",
-      "targetSha256": "e1d201f71a91a9fdaf6ac678c0590347b0848733e0153268b2fe2b234fb122c5",
+      "sha256": "5a4544df489314799d8ab968fff924d04e9d7978810e1b0bb313c4d364878666",
+      "targetSha256": "5a4544df489314799d8ab968fff924d04e9d7978810e1b0bb313c4d364878666",
       "transformation": "created for extraction"
     },
     {
@@ -745,6 +745,14 @@
       "sha256": null,
       "targetSha256": null,
       "transformation": "manifest self-entry; hash intentionally omitted"
+    },
+    {
+      "source": null,
+      "target": ".gitattributes",
+      "sourceSha256": null,
+      "sha256": "e86ec9460f33310aaa782f0e9a84dea1277765bd857560165c520ffdf27e47f0",
+      "targetSha256": "e86ec9460f33310aaa782f0e9a84dea1277765bd857560165c520ffdf27e47f0",
+      "status": "generated"
     }
   ],
   "excluded": [

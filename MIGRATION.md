@@ -59,3 +59,5 @@ Verified packaged SHA-256:
 | TimoxVSSC.exe | 468D240C7806C35FD59401394A4874FBF0C75B73680D221A458FE4BBF4E5548B |
 
 This is unsigned directory packaging, not a published or runtime-qualified release. No application was started.
+
+Git attributes disable automatic text normalization for this snapshot. This preserves the exact imported bytes and SHA-256 across clones; verify the committed blobs as well as the working tree before updating these pins.
