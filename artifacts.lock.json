@@ -1,0 +1,34 @@
+{
+  "formatVersion": 1,
+  "requiredApiVersion": "1.1",
+  "artifacts": [
+    {
+      "path": "artifacts/backend/TimoxVirtualAsioEngine.exe",
+      "repository": "TimoxVAudioEngine",
+      "revision": "working-tree-manifest-sha256:ef63f88337b41713f6a1dc4945a0ea6e765415ea1d56c790f9f98fd89c43a653",
+      "sha256": "6cda07b551b1235264993281ffadf769fbdc04711b0f586751ccfe319045e29d",
+      "sourcePath": "build/Release/TimoxVirtualAsioEngine.exe",
+      "sourceLastWriteTimeUtc": "2026-10-26T18:47:18.794Z",
+      "sizeBytes": 4182016
+    },
+    {
+      "path": "artifacts/backend/PwarAsioClient.exe",
+      "repository": "Timox-Pwar",
+      "revision": "working-tree-manifest-sha256:574558267b45a24e65ac823e9a6c34d0c6050e54e160572524dd2db25df5ae01",
+      "sha256": "29d5e3208e10ae5febbb7fd3914790a87eaf12d32be6bef923f20d7e33566fd3",
+      "sourcePath": "build/Release/PwarAsioClient.exe",
+      "sourceLastWriteTimeUtc": "2026-10-26T18:40:42.386Z",
+      "sizeBytes": 151552
+    }
+  ],
+  "schemas": [
+    {
+      "path": "api/openapi-v1.json",
+      "sha256": "243d01272e07b00cfd52819812ba3f96ec083d57207b4498b3490805081ef392"
+    },
+    {
+      "path": "api/schemas/api-v1.json",
+      "sha256": "113b1ea91f7635457cd40881cfe139e595cf6ab02e38533c99e03670e3140bf0"
+    }
+  ]
+}
