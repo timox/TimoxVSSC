@@ -50,5 +50,5 @@ fs.mkdirSync(publicRoot, { recursive: true });
 fs.copyFileSync(swaggerUi, path.join(publicRoot, 'swagger-ui-bundle.js'));
 fs.copyFileSync(swaggerCss, path.join(publicRoot, 'swagger-ui.css'));
 const spec = JSON.stringify(bundled).replace(/</g, '\\u003c');
-const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TimoxVasio API</title><link rel="stylesheet" href="swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="swagger-ui-bundle.js"></script><script>window.onload=()=>SwaggerUIBundle({spec:${spec},dom_id:'#swagger-ui',deepLinking:true,docExpansion:'list',defaultModelsExpandDepth:-1});</script></body></html>`;
+const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TimoxVasio API</title><link rel="stylesheet" href="swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="swagger-ui-bundle.js"></script><script>window.onload=()=>SwaggerUIBundle({spec:${spec},dom_id:'#swagger-ui',deepLinking:true,docExpansion:'list',defaultModelsExpandDepth:1});</script></body></html>`;
 fs.writeFileSync(path.join(publicRoot, 'swagger.html'), html);

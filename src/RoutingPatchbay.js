@@ -525,7 +525,7 @@ export default function RoutingPatchbay({ sourceGroups = [], destinationGroups =
         const selected = route.id === selectedRouteId;
         const sourceLevel = meterPeakDbfs(meters[route.sourceEndpointId]);
         const routeLevel = sourceLevel + (route.gainDb ?? 0);
-        const signalFlowing = state === 'active' && !route.mute && routeLevel > -90;
+        const signalFlowing = Number.isFinite(sourceLevel) && state === 'active' && !route.mute && routeLevel > -90;
         return { id: route.id, source, target, sourceHandle: route.sourceEndpointId,
             targetHandle: route.destinationEndpointId, type: 'default', interactionWidth: 28,
             reconnectable: !disabled, selected, animated: signalFlowing,
@@ -534,7 +534,7 @@ export default function RoutingPatchbay({ sourceGroups = [], destinationGroups =
                 strokeWidth: selected ? 4 : state === 'active' ? 2.8 : 2.2,
                 strokeDasharray: route.mute ? '2 5' : state === 'pending' ? '7 4' : undefined },
             label: route.gainDb > 0 ? '▲' : undefined,
-            ariaLabel: `${describeRoute(route)}${signalFlowing ? ' · signal flowing' : ''}` };
+            ariaLabel: `${describeRoute(route)}${signalFlowing ? ' · estimated signal from source level and gain' : ''}` };
     }).filter(Boolean);
     // A collapsed block hides handles/cables, but remains connected for layout.
     const layoutEdges = routes.map(route => {

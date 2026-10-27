@@ -1,5 +1,21 @@
 # TimoxVSSC extraction — 2026-10-26
 
+## Supervision follow-up — 2026-10-26
+
+The extraction record below is historical. The current sources add engine-owned
+observations, preserve channel levels across activity-only events, invalidate
+unavailable source levels and distinguish engine-produced sink levels. PWAR
+identification uses the current supervisor PID, not process names; unknown
+status/counters remain unknown. WASAPI labels distinguish requested audio from
+observed stream state. Swagger exposes the supervision models.
+
+Current focused checks: 35 React tests across App meter topology, graph meters,
+PWAR supervision and native audio; 35 Node/Electron/contract tests. Both sets
+pass. Existing unrelated React failures from extraction remain unqualified.
+The engine/schema inputs are pinned in artifacts.lock.json. The original
+artifact and the follow-up candidate are distinct; no running engine is replaced
+by these source changes. No new hardware or real PWAR-network qualification.
+
 Status: source extraction, production React build, binary preflight and directory packaging verified; runtime and release validation remain pending. Source revision and per-file original/final hashes are recorded in `import-manifest.json`. Original files include uncommitted work: the commit alone does not reproduce the imported snapshot.
 
 ## Scope and decisions

@@ -30,25 +30,28 @@
       "source": "api/openapi-v1.json",
       "target": "api/openapi-v1.json",
       "sourceSha256": "243d01272e07b00cfd52819812ba3f96ec083d57207b4498b3490805081ef392",
-      "sha256": "243d01272e07b00cfd52819812ba3f96ec083d57207b4498b3490805081ef392",
-      "targetSha256": "243d01272e07b00cfd52819812ba3f96ec083d57207b4498b3490805081ef392",
-      "transformation": "verbatim import"
+      "sha256": "208dc9c42be9eb0b9449ad89b612c0ecf399c2c478b5848ccc1798e4a7633073",
+      "targetSha256": "208dc9c42be9eb0b9449ad89b612c0ecf399c2c478b5848ccc1798e4a7633073",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "status": "modified"
     },
     {
       "source": "api/schemas/api-v1.json",
       "target": "api/schemas/api-v1.json",
       "sourceSha256": "113b1ea91f7635457cd40881cfe139e595cf6ab02e38533c99e03670e3140bf0",
-      "sha256": "113b1ea91f7635457cd40881cfe139e595cf6ab02e38533c99e03670e3140bf0",
-      "targetSha256": "113b1ea91f7635457cd40881cfe139e595cf6ab02e38533c99e03670e3140bf0",
-      "transformation": "verbatim import"
+      "sha256": "2eb0630bdb93b81b2061aa58556ae4cbbd90480e0d31b44106796b8a05d07302",
+      "targetSha256": "2eb0630bdb93b81b2061aa58556ae4cbbd90480e0d31b44106796b8a05d07302",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "status": "modified"
     },
     {
       "source": null,
       "target": "artifacts.lock.json",
       "sourceSha256": null,
-      "sha256": "b32daad957698728db491f4614836523d77fb832b2eeb9f8fcd32e415988ee30",
-      "targetSha256": "b32daad957698728db491f4614836523d77fb832b2eeb9f8fcd32e415988ee30",
-      "transformation": "created for extraction"
+      "sha256": "953260b89b36e4c5c9439df56c9bd994a95b27618a292b6ccdd2bbd003786b9b",
+      "targetSha256": "953260b89b36e4c5c9439df56c9bd994a95b27618a292b6ccdd2bbd003786b9b",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "status": "generated"
     },
     {
       "source": "gui/assets/installer.nsh",
@@ -198,9 +201,10 @@
       "source": null,
       "target": "MIGRATION.md",
       "sourceSha256": null,
-      "sha256": "5a4544df489314799d8ab968fff924d04e9d7978810e1b0bb313c4d364878666",
-      "targetSha256": "5a4544df489314799d8ab968fff924d04e9d7978810e1b0bb313c4d364878666",
-      "transformation": "created for extraction"
+      "sha256": "2035faf46697c2f3665c6aacbd1de493da7cb1a541837b3aeac0740d4d48b6d9",
+      "targetSha256": "2035faf46697c2f3665c6aacbd1de493da7cb1a541837b3aeac0740d4d48b6d9",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "status": "generated"
     },
     {
       "source": "gui/package-lock.json",
@@ -270,17 +274,19 @@
       "source": "gui/scripts/embed-openapi.js",
       "target": "scripts/embed-openapi.js",
       "sourceSha256": "12fd47c0d57f4d0708f1ea6392151fb156d85bcdfa39b90ec08df38f407fd718",
-      "sha256": "4106ca50621579b3b0a740c0b2f898c7fe88b65bb857f6b3f42fcbf5641154d9",
-      "targetSha256": "4106ca50621579b3b0a740c0b2f898c7fe88b65bb857f6b3f42fcbf5641154d9",
-      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md"
+      "sha256": "b6a8fd3ace38f38e0c65bfe385fd8ccf77373715075b139a8f979cdbccd2dbc4",
+      "targetSha256": "b6a8fd3ace38f38e0c65bfe385fd8ccf77373715075b139a8f979cdbccd2dbc4",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "status": "modified"
     },
     {
       "source": "gui/scripts/embed-openapi.test.cjs",
       "target": "scripts/embed-openapi.test.cjs",
       "sourceSha256": "6c877c9992974453ceaa4080e6acc2c58cd3657f74b6b9bbb10cb13e1e8b1203",
-      "sha256": "6c877c9992974453ceaa4080e6acc2c58cd3657f74b6b9bbb10cb13e1e8b1203",
-      "targetSha256": "6c877c9992974453ceaa4080e6acc2c58cd3657f74b6b9bbb10cb13e1e8b1203",
-      "transformation": "verbatim import"
+      "sha256": "357ce77f140d8f4d979205e00b0bec7245b2b3001f4060f0fedd21e73bc1bd5c",
+      "targetSha256": "357ce77f140d8f4d979205e00b0bec7245b2b3001f4060f0fedd21e73bc1bd5c",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "status": "modified"
     },
     {
       "source": null,
@@ -334,9 +340,10 @@
       "source": "gui/src/api-contract.js",
       "target": "src/api-contract.js",
       "sourceSha256": "d4b1013d22cc035e735aadba7bc98438b0c73c513a80660716eec2fb473d6c95",
-      "sha256": "d4b1013d22cc035e735aadba7bc98438b0c73c513a80660716eec2fb473d6c95",
-      "targetSha256": "d4b1013d22cc035e735aadba7bc98438b0c73c513a80660716eec2fb473d6c95",
-      "transformation": "verbatim import"
+      "sha256": "6f5d6a67f444af55b50ede6db3ff2082affb3bfc60498e27d566d4a35a977821",
+      "targetSha256": "6f5d6a67f444af55b50ede6db3ff2082affb3bfc60498e27d566d4a35a977821",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "status": "modified"
     },
     {
       "source": "gui/src/api-contract.test.cjs",
@@ -358,9 +365,10 @@
       "source": "gui/src/App.js",
       "target": "src/App.js",
       "sourceSha256": "b06bb398673ee0bdc625fe5c0206941e2c2d63fed654ab58cb8b0dfeefbfcc22",
-      "sha256": "2d04cdb8c6203c06988dd51fe40813a37308e40302fde5c5191bab9817c1eb11",
-      "targetSha256": "2d04cdb8c6203c06988dd51fe40813a37308e40302fde5c5191bab9817c1eb11",
-      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md"
+      "sha256": "92975553664f1c4e97696aad0bd9bf7de77620ed61831339d271c5b85ee08580",
+      "targetSha256": "92975553664f1c4e97696aad0bd9bf7de77620ed61831339d271c5b85ee08580",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "status": "modified"
     },
     {
       "source": "gui/src/App.test.js",
@@ -550,9 +558,10 @@
       "source": "gui/src/PwarDialog.js",
       "target": "src/PwarDialog.js",
       "sourceSha256": "3e8b4a55f8826795daf4506e9a568a27bd2a26fa244d0ce8b920f647af754acd",
-      "sha256": "3e8b4a55f8826795daf4506e9a568a27bd2a26fa244d0ce8b920f647af754acd",
-      "targetSha256": "3e8b4a55f8826795daf4506e9a568a27bd2a26fa244d0ce8b920f647af754acd",
-      "transformation": "verbatim import"
+      "sha256": "1c70383315006f0a325e6ecc2ca74727372b369c19cb6055b59c151748b7797e",
+      "targetSha256": "1c70383315006f0a325e6ecc2ca74727372b369c19cb6055b59c151748b7797e",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "status": "modified"
     },
     {
       "source": "gui/src/PwarDialog.test.js",
@@ -638,9 +647,10 @@
       "source": "gui/src/RoutingPatchbay.js",
       "target": "src/RoutingPatchbay.js",
       "sourceSha256": "80377430bb9c203844fc13221a0c8a253e227904746153426b08fec9f7c39482",
-      "sha256": "80377430bb9c203844fc13221a0c8a253e227904746153426b08fec9f7c39482",
-      "targetSha256": "80377430bb9c203844fc13221a0c8a253e227904746153426b08fec9f7c39482",
-      "transformation": "verbatim import"
+      "sha256": "daa3764ef84532cc7859cb60dd3218c0f53fb08d6db7e32929506480aa0d9b69",
+      "targetSha256": "daa3764ef84532cc7859cb60dd3218c0f53fb08d6db7e32929506480aa0d9b69",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "status": "modified"
     },
     {
       "source": "gui/src/RoutingPatchbay.test.js",
@@ -753,6 +763,33 @@
       "sha256": "e86ec9460f33310aaa782f0e9a84dea1277765bd857560165c520ffdf27e47f0",
       "targetSha256": "e86ec9460f33310aaa782f0e9a84dea1277765bd857560165c520ffdf27e47f0",
       "status": "generated"
+    },
+    {
+      "source": null,
+      "target": "src/App.meter-topology.test.js",
+      "sourceSha256": null,
+      "sha256": "34536a0df274c82cc2953cd66f9f92736c96121b9ea147c53d439927363d9ae4",
+      "targetSha256": "34536a0df274c82cc2953cd66f9f92736c96121b9ea147c53d439927363d9ae4",
+      "status": "generated",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26"
+    },
+    {
+      "source": null,
+      "target": "src/RoutingPatchbay.meters.test.js",
+      "sourceSha256": null,
+      "sha256": "759e4ac5f7357998217d02eea3b9cff8c109e5256bc3a7a629da9e8f74598039",
+      "targetSha256": "759e4ac5f7357998217d02eea3b9cff8c109e5256bc3a7a629da9e8f74598039",
+      "status": "generated",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26"
+    },
+    {
+      "source": null,
+      "target": "src/PwarDialog.supervision.test.js",
+      "sourceSha256": null,
+      "sha256": "0bbc839a8901a90630e77b4ac148e451aab37f309c4fa9cc6b68f1f7a0b744c4",
+      "targetSha256": "0bbc839a8901a90630e77b4ac148e451aab37f309c4fa9cc6b68f1f7a0b744c4",
+      "status": "generated",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26"
     }
   ],
   "excluded": [
