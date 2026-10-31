@@ -4,7 +4,7 @@ import { ReactFlow, Background, Handle, Position, useNodesState, useReactFlow } 
 import '@xyflow/react/dist/style.css';
 import './MidiWorkspace.css';
 import {
-    ENGINE_CLOCK_PORT, MESSAGE_CATEGORIES, VIRTUAL_PREFIX, buildMidiNodes, timebaseLabel, clockStateLabel, defaultPosition, emptyConfiguration,
+    ENGINE_CLOCK_PORT, MESSAGE_CATEGORIES, VIRTUAL_PREFIX, buildMidiNodes, referenceClockLabel, clockStateLabel, defaultPosition, emptyConfiguration,
     formatBpm, isActive, loadLayout, loadWidgets, observationsByPort, portObservation, routeStatusById,
     saveLayout, saveWidgets, slugify, sourcePorts, suggestedClockPort, validPortName, widgetNodeId,
     withApplicationPort, withRoute, withUpdatedRoute, withoutApplicationPort, withoutRoute
@@ -128,7 +128,7 @@ function RouteDialog({ route, title, onSave, onDelete, onClose }) {
             Connection enabled</label>
         {!fromEngineClock && <label className="checkbox"><input type="checkbox" checked={reclock}
             onChange={event => setReclock(event.target.checked)} />
-            Reclock on the sound card: re-emit clock ticks on a regular grid timed by the card (removes jitter, keeps the source tempo)</label>}
+            Reclock on the reference clock: re-emit clock ticks on a regular grid in reference clock samples (removes jitter, keeps the source tempo)</label>}
         <fieldset className="midi-channel-grid"><legend>Source channels</legend>
             {Array.from({ length: 16 }, (_, i) => i + 1).map(channel =>
                 <label key={channel}><input type="checkbox" checked={channels.has(channel)}
@@ -195,7 +195,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
     const [error, setError] = useState('');
     const [busy, setBusy] = useState(false);
     const [observations, setObservations] = useState({});
-    const [live, setLive] = useState({});  // engineClock and timebase from supervision events
+    const [live, setLive] = useState({});  // engineClock and referenceClock from supervision events
     const [widgets, setWidgets] = useState(() => loadWidgets(storage));
     const [layout, setLayout] = useState(() => loadLayout(storage));
     const [tick, setTick] = useState(() => Date.now());
@@ -216,7 +216,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
         return api.subscribeEvents(message => {
             if (message.event === 'supervision.observations' && message.payload?.midi) {
                 setObservations(observationsByPort(message.payload.midi));
-                setLive({ engineClock: message.payload.midi.engineClock, timebase: message.payload.midi.timebase });
+                setLive({ engineClock: message.payload.midi.engineClock, referenceClock: message.payload.midi.referenceClock });
             }
         });
     }, [api]);
@@ -238,7 +238,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
     };
 
     const engineClock = live.engineClock || midi?.engineClock;
-    const timebase = live.timebase || midi?.timebase;
+    const referenceClock = live.referenceClock || midi?.referenceClock;
     const setClock = async settings => {
         if (!api?.setMidiClock) return;
         setBusy(true);
@@ -283,11 +283,11 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
     const renderEngineClock = node => <div className={`midi-node engine-clock${engineClock?.running ? ' running' : ''}`}
         data-node-id={node.id} aria-label="Engine clock">
         <div className="midi-node-heading"><strong>Engine clock</strong>
-            <small>{timebase?.reference === 'asio' ? 'Counted in sound card samples'
-                : timebase?.reference === 'software' ? 'Counted in software clock samples' : 'No master clock running'}</small></div>
+            <small>{referenceClock?.source === 'asio' ? 'Counted in sound card samples'
+                : referenceClock?.source === 'software' ? 'Counted in software clock samples' : 'Reference clock not running'}</small></div>
         <div className="midi-engine-clock-body">
             <output className="midi-engine-clock-bpm">{(engineClock?.bpm ?? 120).toFixed(1)}</output> BPM
-            <span className="midi-engine-clock-state">{engineClock?.waitingForMasterClock ? 'Waiting for the master clock'
+            <span className="midi-engine-clock-state">{engineClock?.waitingForReferenceClock ? 'Waiting for the reference clock'
                 : engineClock?.running ? 'Running' : 'Stopped'}</span>
         </div>
         <ul>{node.ports.map(renderPort)}</ul>
@@ -323,7 +323,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             data: { render: () => renderWidget(widget) } }))
     // render closures read the latest observations through `now`
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    ], [graphNodes, widgets, layout, observations, now, portById, engineClock, timebase]);
+    ], [graphNodes, widgets, layout, observations, now, portById, engineClock, referenceClock]);
 
     const flowEdges = [
         ...configuration.routes.map(route => {
@@ -335,7 +335,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             return { id: `route:${route.id}`, source: from.id, target: to.id,
                 sourceHandle: outHandle(route.source), targetHandle: inHandle(route.destination),
                 className: `midi-route-edge${active ? '' : ' inactive'}${route.reclock ? ' reclock' : ''}`, animated: flowing,
-                ariaLabel: `${portLabel(route.source)} to ${route.destination}${route.reclock ? ', clock reclocked on the sound card' : ''}${active ? '' : ', inactive'}` };
+                ariaLabel: `${portLabel(route.source)} to ${route.destination}${route.reclock ? ', clock reclocked on the reference clock' : ''}${active ? '' : ', inactive'}` };
         }).filter(Boolean),
         ...widgets.filter(widget => portOwner.has(widget.portId)).map(widget => ({
             id: `widget:${widget.id}`, source: portOwner.get(widget.portId).id, target: widgetNodeId(widget.id),
@@ -389,7 +389,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                 {busy ? 'Applying…' : unavailable ? `MIDI unavailable${midi.error ? `: ${midi.error}` : ''}` :
                     midi ? `${graphNodes.length} blocks · ${configuration.routes.length} connections` +
                         (clockSources.length ? ` · clock from ${clockSources.map(port => portLabel(port.portId)).join(', ')}` : '') : 'Loading…'}
-                {timebase && <div className="midi-timebase">{timebaseLabel(timebase)}</div>}
+                {referenceClock && <div className="midi-reference-clock">{referenceClockLabel(referenceClock)}</div>}
             </div></div>
         {error && <p className="notice midi-error" role="alert">{error}</p>}
         <div className="patchbay-flow midi-flow" role="region" aria-label="MIDI connections" ref={graphRef} tabIndex="0"
@@ -422,10 +422,10 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             {contextNode && <>
                 <strong>{contextNode.label}</strong>
                 {contextNode.kind === 'engineClock' && <>
-                    <button type="button" role="menuitem" disabled={busy || engineClock?.running || !timebase || timebase.reference === 'none'}
-                        title={timebase?.reference === 'none' ? 'Start audio first: the clock counts the master clock samples' : undefined}
+                    <button type="button" role="menuitem" disabled={busy || engineClock?.running || !referenceClock || referenceClock.source === 'none'}
+                        title={referenceClock?.source === 'none' ? 'Start audio first: the clock counts the reference clock samples' : undefined}
                         onClick={() => menuAction(() => setClock({ transport: 'start' }))}>Start clock</button>
-                    <button type="button" role="menuitem" disabled={busy || engineClock?.running || !timebase || timebase.reference === 'none'}
+                    <button type="button" role="menuitem" disabled={busy || engineClock?.running || !referenceClock || referenceClock.source === 'none'}
                         onClick={() => menuAction(() => setClock({ transport: 'continue' }))}>Continue clock</button>
                     <button type="button" role="menuitem" disabled={busy || !engineClock?.running}
                         onClick={() => menuAction(() => setClock({ transport: 'stop' }))}>Stop clock</button>

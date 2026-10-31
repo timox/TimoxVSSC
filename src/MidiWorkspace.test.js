@@ -186,19 +186,19 @@ test('an unavailable MIDI engine is reported without blocking the tab', async ()
     } finally { await view.unmount(); }
 });
 
-test('the engine clock follows the sound card and is driven from its block menu', async () => {
+test('the engine clock follows the reference clock and is driven from its block menu', async () => {
     const configuration = { virtualPorts: [], routes: [
         { id: 'keys-to-synth', source: 'midi:port:1:usb', destination: 'midi:port:2:usb', enabled: true }] };
     const base = document_(configuration);
     const api = fakeApi({ ...base,
         ports: [{ id: 'midi:clock:engine', name: 'Engine clock', kind: 'engineClock', source: true, destination: false,
             online: true, open: true, clock: { ticks: 0, running: false, bpm: null } }, ...base.ports],
-        timebase: { reference: 'asio', nominalSampleRate: 48000, measuredSampleRate: 48000.48, driftPpm: 10, measuredOverSeconds: 30 },
+        referenceClock: { source: 'asio', nominalSampleRate: 48000, measuredSampleRate: 48000.48, driftPpm: 10, measuredOverSeconds: 30 },
         engineClock: { bpm: 120, running: false, ticks: 0, transport: null } });
     const view = await mount(api);
     try {
-        expect(view.container.querySelector('.midi-timebase').textContent)
-            .toBe('Timing: sound card 48000.48 Hz (+10.0 ppm vs Windows counter)');
+        expect(view.container.querySelector('.midi-reference-clock').textContent)
+            .toBe('Reference clock: sound card 48000.48 Hz (+10.0 ppm vs Windows counter)');
         const block = view.container.querySelector('[data-flow-node="midi-engine-clock"]');
         expect(block.textContent).toContain('Counted in sound card samples');
         expect(block.textContent).toContain('120.0');
@@ -222,18 +222,18 @@ test('the engine clock follows the sound card and is driven from its block menu'
     } finally { await view.unmount(); }
 });
 
-test('without a master clock the engine clock cannot be started and shows why', async () => {
+test('without a running reference clock the engine clock cannot be started and shows why', async () => {
     const base = document_({ virtualPorts: [], routes: [] });
     const api = fakeApi({ ...base,
         ports: [{ id: 'midi:clock:engine', name: 'Engine clock', kind: 'engineClock', source: true, destination: false,
             online: true, open: true, clock: { ticks: 0, running: false, bpm: null } }, ...base.ports],
-        timebase: { reference: 'none', nominalSampleRate: null, measuredSampleRate: null, driftPpm: null, measuredOverSeconds: 0 },
-        engineClock: { bpm: 120, running: true, waitingForMasterClock: true, ticks: 40, transport: 'start' } });
+        referenceClock: { source: 'none', nominalSampleRate: null, measuredSampleRate: null, driftPpm: null, measuredOverSeconds: 0 },
+        engineClock: { bpm: 120, running: true, waitingForReferenceClock: true, ticks: 40, transport: 'start' } });
     const view = await mount(api);
     try {
-        expect(view.container.querySelector('.midi-timebase').textContent).toBe('Timing: no master clock running (start audio)');
+        expect(view.container.querySelector('.midi-reference-clock').textContent).toBe('Reference clock: not running (start audio)');
         const block = view.container.querySelector('[data-flow-node="midi-engine-clock"]');
-        expect(block.textContent).toContain('Waiting for the master clock');
+        expect(block.textContent).toContain('Waiting for the reference clock');
         await act(async () => Simulate.contextMenu(block, { clientX: 10, clientY: 10 }));
         expect(menuItem('Start clock').disabled).toBe(true);
     } finally { await view.unmount(); }

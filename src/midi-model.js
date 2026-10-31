@@ -177,15 +177,16 @@ export function saveLayout(storage, layout) {
 
 // Default positions: devices that send on the left, applications in the
 // middle, devices that only receive on the right, widgets above.
-// Text for the time reference: MIDI follows the graph's master clock (ASIO
-// card or software clock), never Windows timers.
-export function timebaseLabel(timebase) {
-    if (!timebase) return '';
-    if (timebase.reference === 'none' || !timebase.reference) return 'Timing: no master clock running (start audio)';
-    const master = timebase.reference === 'software' ? 'software clock' : 'sound card';
-    if (typeof timebase.driftPpm !== 'number') return `Timing: ${master} ${timebase.nominalSampleRate} Hz, measuring…`;
-    const sign = timebase.driftPpm >= 0 ? '+' : '−';
-    return `Timing: ${master} ${timebase.measuredSampleRate.toFixed(2)} Hz (${sign}${Math.abs(timebase.driftPpm).toFixed(1)} ppm vs Windows counter)`;
+// Text for the reference clock: the clock that paces the audio graph (ASIO
+// card or software clock). MIDI timing follows it, never Windows timers. It
+// is not a MIDI clock master/slave role.
+export function referenceClockLabel(referenceClock) {
+    if (!referenceClock) return '';
+    if (referenceClock.source === 'none' || !referenceClock.source) return 'Reference clock: not running (start audio)';
+    const clock = referenceClock.source === 'software' ? 'software clock' : 'sound card';
+    if (typeof referenceClock.driftPpm !== 'number') return `Reference clock: ${clock} ${referenceClock.nominalSampleRate} Hz, measuring…`;
+    const sign = referenceClock.driftPpm >= 0 ? '+' : '−';
+    return `Reference clock: ${clock} ${referenceClock.measuredSampleRate.toFixed(2)} Hz (${sign}${Math.abs(referenceClock.driftPpm).toFixed(1)} ppm vs Windows counter)`;
 }
 
 export function defaultPosition(node, index) {

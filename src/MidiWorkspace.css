@@ -48,7 +48,7 @@
 .midi-dialog .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 .midi-dialog .dialog-actions .danger { margin-right: auto; color: var(--danger, #b42318); }
 
-.midi-timebase { margin-top: 2px; font-size: 12px; }
+.midi-reference-clock { margin-top: 2px; font-size: 12px; }
 .midi-node.engine-clock { border-color: #f0a92e; }
 .midi-node.engine-clock.running .midi-node-heading strong::after { content: ' ●'; color: #2fbf71; }
 .midi-engine-clock-body { display: flex; align-items: baseline; gap: 6px; padding: 6px 10px 0; color: var(--text-secondary); font-size: 12px; }

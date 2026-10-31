@@ -1,5 +1,5 @@
 import {
-    buildMidiNodes, timebaseLabel, clockStateLabel, formatBpm, isActive, loadWidgets, observationsByPort, saveWidgets, slugify,
+    buildMidiNodes, referenceClockLabel, clockStateLabel, formatBpm, isActive, loadWidgets, observationsByPort, saveWidgets, slugify,
     suggestedClockPort, validPortName, withApplicationPort, withRoute, withoutApplicationPort, WIDGET_STORAGE_KEY
 } from './midi-model';
 
@@ -84,13 +84,13 @@ test('widgets are kept in local storage and invalid data is ignored', () => {
     expect(loadWidgets(storage)).toEqual([]);
 });
 
-test('the timing reference names the sound card frequency and drift', () => {
-    expect(timebaseLabel({ reference: 'none' })).toBe('Timing: no master clock running (start audio)');
-    expect(timebaseLabel({ reference: 'asio', nominalSampleRate: 48000, driftPpm: null })).toBe('Timing: sound card 48000 Hz, measuring…');
-    expect(timebaseLabel({ reference: 'asio', measuredSampleRate: 47999.04, driftPpm: -20 }))
-        .toBe('Timing: sound card 47999.04 Hz (−20.0 ppm vs Windows counter)');
-    expect(timebaseLabel({ reference: 'software', measuredSampleRate: 48000, driftPpm: 0 }))
-        .toBe('Timing: software clock 48000.00 Hz (+0.0 ppm vs Windows counter)');
+test('the reference clock label names the sound card or software clock frequency and drift', () => {
+    expect(referenceClockLabel({ source: 'none' })).toBe('Reference clock: not running (start audio)');
+    expect(referenceClockLabel({ source: 'asio', nominalSampleRate: 48000, driftPpm: null })).toBe('Reference clock: sound card 48000 Hz, measuring…');
+    expect(referenceClockLabel({ source: 'asio', measuredSampleRate: 47999.04, driftPpm: -20 }))
+        .toBe('Reference clock: sound card 47999.04 Hz (−20.0 ppm vs Windows counter)');
+    expect(referenceClockLabel({ source: 'software', measuredSampleRate: 48000, driftPpm: 0 }))
+        .toBe('Reference clock: software clock 48000.00 Hz (+0.0 ppm vs Windows counter)');
     const nodes = buildMidiNodes({ ports: [{ id: 'midi:clock:engine', kind: 'engineClock', source: true }] });
     expect(nodes[0]).toEqual(expect.objectContaining({ id: 'midi-engine-clock', kind: 'engineClock' }));
     expect(nodes[0].ports[0].side).toBe('source');
