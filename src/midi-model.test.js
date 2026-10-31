@@ -1,5 +1,5 @@
 import {
-    buildMidiNodes, clockStateLabel, formatBpm, isActive, loadWidgets, observationsByPort, saveWidgets, slugify,
+    buildMidiNodes, timebaseLabel, clockStateLabel, formatBpm, isActive, loadWidgets, observationsByPort, saveWidgets, slugify,
     suggestedClockPort, validPortName, withApplicationPort, withRoute, withoutApplicationPort, WIDGET_STORAGE_KEY
 } from './midi-model';
 
@@ -82,4 +82,14 @@ test('widgets are kept in local storage and invalid data is ignored', () => {
     expect(loadWidgets(storage)).toEqual([{ id: 'w1', portId: 'midi:port:1:usb' }]);
     values[WIDGET_STORAGE_KEY] = '{broken';
     expect(loadWidgets(storage)).toEqual([]);
+});
+
+test('the timing reference names the sound card frequency and drift', () => {
+    expect(timebaseLabel({ reference: 'windows' })).toBe('Timing: Windows clock (no sound card running)');
+    expect(timebaseLabel({ reference: 'soundCard', nominalSampleRate: 48000, driftPpm: null })).toBe('Timing: sound card 48000 Hz, measuring…');
+    expect(timebaseLabel({ reference: 'soundCard', measuredSampleRate: 47999.04, driftPpm: -20 }))
+        .toBe('Timing: sound card 47999.04 Hz (−20.0 ppm vs Windows)');
+    const nodes = buildMidiNodes({ ports: [{ id: 'midi:clock:engine', kind: 'engineClock', source: true }] });
+    expect(nodes[0]).toEqual(expect.objectContaining({ id: 'midi-engine-clock', kind: 'engineClock' }));
+    expect(nodes[0].ports[0].side).toBe('source');
 });

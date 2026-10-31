@@ -47,3 +47,11 @@
 .midi-dialog-error { color: var(--danger, #b42318); font-size: 13px; }
 .midi-dialog .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 .midi-dialog .dialog-actions .danger { margin-right: auto; color: var(--danger, #b42318); }
+
+.midi-timebase { margin-top: 2px; font-size: 12px; }
+.midi-node.engine-clock { border-color: #f0a92e; }
+.midi-node.engine-clock.running .midi-node-heading strong::after { content: ' ●'; color: #2fbf71; }
+.midi-engine-clock-body { display: flex; align-items: baseline; gap: 6px; padding: 6px 10px 0; color: var(--text-secondary); font-size: 12px; }
+.midi-engine-clock-bpm { color: var(--text-primary); font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.midi-engine-clock-state { margin-left: auto; }
+.react-flow__edge.midi-route-edge.reclock .react-flow__edge-path { stroke-width: 3.5; }

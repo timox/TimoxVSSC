@@ -37,6 +37,8 @@ La section **MIDI** est séparée du son. Elle affiche le patch bay MIDI 1.0 du 
 - Tirer un câble d'une sortie vers une entrée crée une connexion MIDI. Le menu contextuel d'un câble ouvre ses propriétés (canaux, types de messages, canal de sortie, transposition) dans une fenêtre, ou le supprime. Un câble en pointillés est configuré mais inactif.
 - Le menu contextuel du fond ajoute un port d'application ou un affichage BPM, ou relit la liste des ports.
 - Le voyant vert d'un port indique de l'activité (notes, contrôleurs…), jamais les ticks d'horloge. Un port qui reçoit une horloge affiche son tempo (♩) ; s'il est barré, c'est probablement l'écho de l'horloge envoyée par le patch bay.
+- **Horloge du moteur** : le bloc « Engine clock » génère une horloge MIDI en comptant les échantillons de la carte son ; elle ne dérive donc jamais de l'audio. Son menu contextuel la démarre, l'arrête, la relance (continue) ou règle son tempo dans une fenêtre. On la relie par un câble comme n'importe quelle source. L'en-tête de l'onglet indique la fréquence réelle mesurée de la carte et sa dérive par rapport à Windows (en ppm).
+- **Recalage** : dans les propriétés d'une connexion, « Reclock on the sound card » réémet l'horloge reçue sur une grille régulière en temps carte : la gigue disparaît, le tempo de la source est conservé. Le câble est alors plus épais.
 - **Affichage BPM** : un widget à affecter à un port, depuis son menu contextuel ou en tirant un câble du port vers le widget. Il affiche le tempo de l'horloge qui arrive sur ce port, son état et le dernier start/stop. Le port d'arrivée identifie l'émetteur de l'horloge. Les widgets et la position des blocs restent dans l'interface : ils ne modifient pas le moteur.
 
 ## Performance

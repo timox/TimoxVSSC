@@ -37,6 +37,8 @@ The **MIDI** section is separate from audio. It shows the engine's MIDI 1.0 patc
 - Drag a cable from an output to an input to create a MIDI connection. A cable's context menu opens its properties (channels, message types, output channel, transpose) in a dialog, or deletes it. A dashed cable is configured but inactive.
 - The background context menu adds an application port or a BPM display, or re-reads the port list.
 - A port's green light shows activity (notes, controllers…), never clock ticks. A port receiving clock shows its tempo (♩); struck through, it is probably the echo of clock sent by the patchbay.
+- **Engine clock**: the "Engine clock" block generates MIDI clock by counting sound card samples, so it never drifts from the audio. Its context menu starts, stops, continues it or sets its tempo in a dialog. Connect it with a cable like any source. The tab header shows the card's measured real frequency and its drift against Windows (ppm).
+- **Reclocking**: in a connection's properties, "Reclock on the sound card" re-emits the received clock on a regular grid in card time: jitter disappears, the source tempo is kept. The cable is then thicker.
 - **BPM display**: a widget assigned to a port from its context menu or by dragging a cable from the port to the widget. It shows the tempo of the clock arriving on that port, its state and the last start/stop. The receiving port identifies the clock emitter. Widgets and block positions stay in the interface; they do not change the engine.
 
 ## Performance

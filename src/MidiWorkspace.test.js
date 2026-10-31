@@ -72,6 +72,12 @@ function fakeApi(initial) {
     let current = initial;
     const listeners = [];
     const api = {
+        setMidiClock: jest.fn(async settings => {
+            current = { ...current, engineClock: { ...current.engineClock,
+                ...(settings.bpm ? { bpm: settings.bpm } : {}),
+                ...(settings.transport ? { running: settings.transport !== 'stop', transport: settings.transport } : {}) } };
+            return current;
+        }),
         getMidi: jest.fn(async () => current),
         replaceMidiConfiguration: jest.fn(async configuration => { current = document_(configuration); return current; }),
         subscribeEvents: jest.fn(callback => { listeners.push(callback); return () => {}; }),
@@ -177,5 +183,41 @@ test('an unavailable MIDI engine is reported without blocking the tab', async ()
     const view = await mount(api);
     try {
         expect(view.container.querySelector('[role="alert"]').textContent).toContain('not running');
+    } finally { await view.unmount(); }
+});
+
+test('the engine clock follows the sound card and is driven from its block menu', async () => {
+    const configuration = { virtualPorts: [], routes: [
+        { id: 'keys-to-synth', source: 'midi:port:1:usb', destination: 'midi:port:2:usb', enabled: true }] };
+    const base = document_(configuration);
+    const api = fakeApi({ ...base,
+        ports: [{ id: 'midi:clock:engine', name: 'Engine clock', kind: 'engineClock', source: true, destination: false,
+            online: true, open: true, clock: { ticks: 0, running: false, bpm: null } }, ...base.ports],
+        timebase: { reference: 'soundCard', nominalSampleRate: 48000, measuredSampleRate: 48000.48, driftPpm: 10, measuredOverSeconds: 30 },
+        engineClock: { bpm: 120, running: false, ticks: 0, transport: null } });
+    const view = await mount(api);
+    try {
+        expect(view.container.querySelector('.midi-timebase').textContent)
+            .toBe('Timing: sound card 48000.48 Hz (+10.0 ppm vs Windows)');
+        const block = view.container.querySelector('[data-flow-node="midi-engine-clock"]');
+        expect(block.textContent).toContain('Counted in sound card samples');
+        expect(block.textContent).toContain('120.0');
+        await choose(block, 'Start clock');
+        expect(api.setMidiClock).toHaveBeenLastCalledWith({ transport: 'start' });
+        expect(view.container.querySelector('[data-flow-node="midi-engine-clock"]').textContent).toContain('Running');
+        await choose(view.container.querySelector('[data-flow-node="midi-engine-clock"]'), 'Set tempo…');
+        await act(async () => Simulate.change(document.querySelector('[role="dialog"] input'), { target: { value: '98.5' } }));
+        await act(async () => Simulate.click(dialogButton('Save')));
+        expect(api.setMidiClock).toHaveBeenLastCalledWith({ bpm: 98.5 });
+        expect(view.container.querySelector('[data-flow-node="midi-engine-clock"]').textContent).toContain('98.5');
+
+        // An incoming clock can be reclocked on the card from the connection properties.
+        await choose(view.container.querySelector('[data-flow-edge="route:keys-to-synth"]'), 'Connection properties…');
+        const reclock = [...document.querySelectorAll('[role="dialog"] label.checkbox')]
+            .find(label => label.textContent.startsWith('Reclock')).querySelector('input');
+        await act(async () => Simulate.change(reclock, { target: { checked: true } }));
+        await act(async () => Simulate.click(dialogButton('Save')));
+        expect(api.replaceMidiConfiguration.mock.calls[0][0].routes[0]).toEqual(
+            { id: 'keys-to-synth', source: 'midi:port:1:usb', destination: 'midi:port:2:usb', enabled: true, reclock: true });
     } finally { await view.unmount(); }
 });

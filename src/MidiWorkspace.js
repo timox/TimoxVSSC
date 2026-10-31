@@ -4,7 +4,7 @@ import { ReactFlow, Background, Handle, Position, useNodesState, useReactFlow } 
 import '@xyflow/react/dist/style.css';
 import './MidiWorkspace.css';
 import {
-    MESSAGE_CATEGORIES, VIRTUAL_PREFIX, buildMidiNodes, clockStateLabel, defaultPosition, emptyConfiguration,
+    ENGINE_CLOCK_PORT, MESSAGE_CATEGORIES, VIRTUAL_PREFIX, buildMidiNodes, timebaseLabel, clockStateLabel, defaultPosition, emptyConfiguration,
     formatBpm, isActive, loadLayout, loadWidgets, observationsByPort, portObservation, routeStatusById,
     saveLayout, saveWidgets, slugify, sourcePorts, suggestedClockPort, validPortName, widgetNodeId,
     withApplicationPort, withRoute, withUpdatedRoute, withoutApplicationPort, withoutRoute
@@ -100,6 +100,8 @@ function ApplicationPortDialog({ port, takenIds, onSave, onClose }) {
 
 function RouteDialog({ route, title, onSave, onDelete, onClose }) {
     const [enabled, setEnabled] = useState(route.enabled !== false);
+    const [reclock, setReclock] = useState(route.reclock === true);
+    const fromEngineClock = route.source === ENGINE_CLOCK_PORT;
     const [channels, setChannels] = useState(new Set(route.channels || Array.from({ length: 16 }, (_, i) => i + 1)));
     const [messages, setMessages] = useState(new Set(route.messages || MESSAGE_CATEGORIES.map(([id]) => id)));
     const [outputChannel, setOutputChannel] = useState(route.outputChannel ?? '');
@@ -117,12 +119,16 @@ function RouteDialog({ route, title, onSave, onDelete, onClose }) {
         if (messages.size < MESSAGE_CATEGORIES.length) next.messages = MESSAGE_CATEGORIES.map(([id]) => id).filter(id => messages.has(id));
         if (outputChannel !== '') next.outputChannel = Number(outputChannel);
         if (Number(transpose) !== 0) next.transpose = Number(transpose);
+        if (reclock && !fromEngineClock) next.reclock = true;
         onSave(next);
     };
     return <Modal label="MIDI connection properties" onClose={onClose}>
         <p className="hint">{title}</p>
         <label className="checkbox"><input type="checkbox" checked={enabled} onChange={event => setEnabled(event.target.checked)} />
             Connection enabled</label>
+        {!fromEngineClock && <label className="checkbox"><input type="checkbox" checked={reclock}
+            onChange={event => setReclock(event.target.checked)} />
+            Reclock on the sound card: re-emit clock ticks on a regular grid timed by the card (removes jitter, keeps the source tempo)</label>}
         <fieldset className="midi-channel-grid"><legend>Source channels</legend>
             {Array.from({ length: 16 }, (_, i) => i + 1).map(channel =>
                 <label key={channel}><input type="checkbox" checked={channels.has(channel)}
@@ -145,6 +151,22 @@ function RouteDialog({ route, title, onSave, onDelete, onClose }) {
             <button type="button" className="danger" onClick={onDelete}>Delete connection</button>
             <button type="button" onClick={onClose}>Cancel</button>
             <button type="button" className="primary" disabled={!valid} onClick={save}>Save</button>
+        </div>
+    </Modal>;
+}
+
+function TempoDialog({ bpm, onSave, onClose }) {
+    const [value, setValue] = useState(String(bpm ?? 120));
+    const number = Number(value);
+    const valid = Number.isFinite(number) && number >= 20 && number <= 300;
+    return <Modal label="Engine clock tempo" onClose={onClose}>
+        <p className="hint">Ticks are counted in sound card samples, so this clock never drifts from the audio.</p>
+        <label className="field">Tempo (BPM)
+            <input type="number" min="20" max="300" step="0.1" value={value} onChange={event => setValue(event.target.value)} autoFocus /></label>
+        {!valid && <p className="midi-dialog-error">Use a tempo between 20 and 300 BPM.</p>}
+        <div className="dialog-actions">
+            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="button" className="primary" disabled={!valid} onClick={() => onSave(number)}>Save</button>
         </div>
     </Modal>;
 }
@@ -173,6 +195,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
     const [error, setError] = useState('');
     const [busy, setBusy] = useState(false);
     const [observations, setObservations] = useState({});
+    const [live, setLive] = useState({});  // engineClock and timebase from supervision events
     const [widgets, setWidgets] = useState(() => loadWidgets(storage));
     const [layout, setLayout] = useState(() => loadLayout(storage));
     const [tick, setTick] = useState(() => Date.now());
@@ -191,8 +214,10 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
     useEffect(() => {
         if (!api?.subscribeEvents) return undefined;
         return api.subscribeEvents(message => {
-            if (message.event === 'supervision.observations' && message.payload?.midi)
+            if (message.event === 'supervision.observations' && message.payload?.midi) {
                 setObservations(observationsByPort(message.payload.midi));
+                setLive({ engineClock: message.payload.midi.engineClock, timebase: message.payload.midi.timebase });
+            }
         });
     }, [api]);
     useEffect(() => {
@@ -209,6 +234,16 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
         setBusy(true);
         try { setMidi(await api.replaceMidiConfiguration(next)); setError(''); }
         catch (failure) { setError(failure.message || 'The MIDI configuration was not applied'); }
+        finally { setBusy(false); }
+    };
+
+    const engineClock = live.engineClock || midi?.engineClock;
+    const timebase = live.timebase || midi?.timebase;
+    const setClock = async settings => {
+        if (!api?.setMidiClock) return;
+        setBusy(true);
+        try { setMidi(await api.setMidiClock(settings)); setLive({}); setError(''); }
+        catch (failure) { setError(failure.message || 'The engine clock was not changed'); }
         finally { setBusy(false); }
     };
 
@@ -245,7 +280,18 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
         </li>;
     };
 
-    const renderNode = node => <div className={`midi-node ${node.kind}${node.offline ? ' offline' : ''}`}
+    const renderEngineClock = node => <div className={`midi-node engine-clock${engineClock?.running ? ' running' : ''}`}
+        data-node-id={node.id} aria-label="Engine clock">
+        <div className="midi-node-heading"><strong>Engine clock</strong>
+            <small>{timebase?.reference === 'soundCard' ? 'Counted in sound card samples' : 'Windows clock (no sound card)'}</small></div>
+        <div className="midi-engine-clock-body">
+            <output className="midi-engine-clock-bpm">{(engineClock?.bpm ?? 120).toFixed(1)}</output> BPM
+            <span className="midi-engine-clock-state">{engineClock?.running ? 'Running' : 'Stopped'}</span>
+        </div>
+        <ul>{node.ports.map(renderPort)}</ul>
+    </div>;
+
+    const renderNode = node => node.kind === 'engineClock' ? renderEngineClock(node) : <div className={`midi-node ${node.kind}${node.offline ? ' offline' : ''}`}
         data-node-id={node.id} aria-label={`${node.kind === 'application' ? 'Application port' : 'MIDI device'} ${node.label}`}>
         <div className="midi-node-heading"><strong>{node.label}</strong>
             <small>{node.kind === 'application' ? 'Application' : node.offline ? 'Device · offline' : 'MIDI 1.0 device'}</small></div>
@@ -275,7 +321,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             data: { render: () => renderWidget(widget) } }))
     // render closures read the latest observations through `now`
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    ], [graphNodes, widgets, layout, observations, now, portById]);
+    ], [graphNodes, widgets, layout, observations, now, portById, engineClock, timebase]);
 
     const flowEdges = [
         ...configuration.routes.map(route => {
@@ -286,8 +332,8 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                 .activity?.lastUnixMs, now);
             return { id: `route:${route.id}`, source: from.id, target: to.id,
                 sourceHandle: outHandle(route.source), targetHandle: inHandle(route.destination),
-                className: `midi-route-edge${active ? '' : ' inactive'}`, animated: flowing,
-                ariaLabel: `${portLabel(route.source)} to ${route.destination}${active ? '' : ', inactive'}` };
+                className: `midi-route-edge${active ? '' : ' inactive'}${route.reclock ? ' reclock' : ''}`, animated: flowing,
+                ariaLabel: `${portLabel(route.source)} to ${route.destination}${route.reclock ? ', clock reclocked on the sound card' : ''}${active ? '' : ', inactive'}` };
         }).filter(Boolean),
         ...widgets.filter(widget => portOwner.has(widget.portId)).map(widget => ({
             id: `widget:${widget.id}`, source: portOwner.get(widget.portId).id, target: widgetNodeId(widget.id),
@@ -341,6 +387,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                 {busy ? 'Applying…' : unavailable ? `MIDI unavailable${midi.error ? `: ${midi.error}` : ''}` :
                     midi ? `${graphNodes.length} blocks · ${configuration.routes.length} connections` +
                         (clockSources.length ? ` · clock from ${clockSources.map(port => portLabel(port.portId)).join(', ')}` : '') : 'Loading…'}
+                {timebase && <div className="midi-timebase">{timebaseLabel(timebase)}</div>}
             </div></div>
         {error && <p className="notice midi-error" role="alert">{error}</p>}
         <div className="patchbay-flow midi-flow" role="region" aria-label="MIDI connections" ref={graphRef} tabIndex="0"
@@ -372,6 +419,16 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             </>}
             {contextNode && <>
                 <strong>{contextNode.label}</strong>
+                {contextNode.kind === 'engineClock' && <>
+                    <button type="button" role="menuitem" disabled={busy || engineClock?.running}
+                        onClick={() => menuAction(() => setClock({ transport: 'start' }))}>Start clock</button>
+                    <button type="button" role="menuitem" disabled={busy || engineClock?.running}
+                        onClick={() => menuAction(() => setClock({ transport: 'continue' }))}>Continue clock</button>
+                    <button type="button" role="menuitem" disabled={busy || !engineClock?.running}
+                        onClick={() => menuAction(() => setClock({ transport: 'stop' }))}>Stop clock</button>
+                    <button type="button" role="menuitem" disabled={busy}
+                        onClick={() => menuAction(() => setDialog({ kind: 'tempo' }))}>Set tempo…</button>
+                </>}
                 {contextVirtual && <button type="button" role="menuitem" disabled={busy}
                     onClick={() => menuAction(() => setDialog({ kind: 'port', port: contextVirtual }))}>Edit application port…</button>}
                 {firstSource(contextNode) && <button type="button" role="menuitem"
@@ -406,6 +463,8 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             onClose={() => setDialog(null)}
             onDelete={() => { setDialog(null); apply(withoutRoute(configuration, dialog.route.id)); }}
             onSave={route => { setDialog(null); apply(withUpdatedRoute(configuration, route)); }} />}
+        {dialog?.kind === 'tempo' && <TempoDialog bpm={engineClock?.bpm} onClose={() => setDialog(null)}
+            onSave={bpm => { setDialog(null); setClock({ bpm }); }} />}
         {dialog?.kind === 'widget' && <WidgetDialog widget={dialog.widget} choices={widgetChoices} suggested={dialog.suggested}
             onClose={() => setDialog(null)}
             onSave={portId => {

@@ -4,6 +4,8 @@
 
 export const VIRTUAL_PREFIX = 'midi:virtual:';
 export const PORT_PREFIX = 'midi:port:';
+export const ENGINE_CLOCK_PORT = 'midi:clock:engine';
+export const ENGINE_CLOCK_NODE = 'midi-engine-clock';
 export const MESSAGE_CATEGORIES = [
     ['notes', 'Notes'], ['controlChange', 'Control change'], ['programChange', 'Program change'],
     ['pitchBend', 'Pitch bend'], ['channelPressure', 'Channel pressure'], ['polyPressure', 'Poly pressure'],
@@ -56,7 +58,10 @@ export function buildMidiNodes(midi) {
     const nodes = [];
     const devices = new Map();
     for (const port of midi?.ports || []) {
-        if (port.kind === 'virtual') {
+        if (port.kind === 'engineClock') {
+            nodes.push({ id: ENGINE_CLOCK_NODE, kind: 'engineClock', label: 'Engine clock', resourceId: 'engine',
+                ports: [{ id: port.id, name: 'Clock out', side: 'source', portRef: port }] });
+        } else if (port.kind === 'virtual') {
             const id = port.id.slice(VIRTUAL_PREFIX.length);
             nodes.push({ id: applicationNodeId(id), kind: 'application', label: port.name || id, resourceId: id,
                 ports: [
@@ -172,8 +177,18 @@ export function saveLayout(storage, layout) {
 
 // Default positions: devices that send on the left, applications in the
 // middle, devices that only receive on the right, widgets above.
+// Text for the time reference: the sound card's measured frequency and drift.
+export function timebaseLabel(timebase) {
+    if (!timebase) return '';
+    if (timebase.reference !== 'soundCard') return 'Timing: Windows clock (no sound card running)';
+    if (typeof timebase.driftPpm !== 'number') return `Timing: sound card ${timebase.nominalSampleRate} Hz, measuring…`;
+    const sign = timebase.driftPpm >= 0 ? '+' : '−';
+    return `Timing: sound card ${timebase.measuredSampleRate.toFixed(2)} Hz (${sign}${Math.abs(timebase.driftPpm).toFixed(1)} ppm vs Windows)`;
+}
+
 export function defaultPosition(node, index) {
     if (node.kind === 'widget') return { x: 40 + index * 200, y: -170 };
+    if (node.kind === 'engineClock') return { x: 40, y: -170 };
     const column = node.kind === 'application' ? 1
         : node.ports.some(port => port.side === 'source') ? 0 : 2;
     return { x: 40 + column * 360, y: 20 + index * 150 };
