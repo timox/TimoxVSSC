@@ -148,7 +148,7 @@ export function withApplicationPort(configuration, port) {
 
 export function withoutApplicationPort(configuration, id) {
     const portId = VIRTUAL_PREFIX + id;
-    return { virtualPorts: configuration.virtualPorts.filter(port => port.id !== id),
+    return { ...configuration, virtualPorts: configuration.virtualPorts.filter(port => port.id !== id),
         routes: configuration.routes.filter(route => route.source !== portId && route.destination !== portId) };
 }
 

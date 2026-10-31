@@ -54,6 +54,17 @@ test('names and ids follow the engine limits', () => {
     expect(validPortName('x'.repeat(25))).toBe(false);
 });
 
+test('removing an application preserves the tempo, other configuration fields and unrelated routes', () => {
+    const unrelated = { id: 'keep', source: 'midi:port:1:usb', destination: 'midi:port:2:usb' };
+    const configuration = { ...midi.configuration, version: 1, engineClock: { bpm: 137 },
+        routes: [...midi.configuration.routes, unrelated] };
+    expect(withoutApplicationPort(configuration, 'bitwig')).toEqual({
+        ...configuration, virtualPorts: [], routes: [unrelated]
+    });
+    expect(configuration.virtualPorts).toHaveLength(1);
+    expect(configuration.routes).toHaveLength(2);
+});
+
 test('clock display separates running, measuring, echo and stopped states', () => {
     expect(formatBpm({ running: true, bpm: 120 })).toBe('120.0');
     expect(formatBpm({ running: true, bpm: null })).toBe('…');

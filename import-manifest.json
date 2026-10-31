@@ -49,8 +49,8 @@
       "target": "artifacts.lock.json",
       "sourceSha256": null,
       "sha256": "953260b89b36e4c5c9439df56c9bd994a95b27618a292b6ccdd2bbd003786b9b",
-      "targetSha256": "953260b89b36e4c5c9439df56c9bd994a95b27618a292b6ccdd2bbd003786b9b",
-      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "targetSha256": "f79740ff0b03ec9cf064ce12e44ac1416640d54d2e1a9391e6d11dbdd4b54533",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31",
       "status": "generated"
     },
     {
@@ -211,16 +211,16 @@
       "target": "package-lock.json",
       "sourceSha256": "c796bd9703520a09d870b901e6666139a6564417bbbfa85aa52bff36e5d0fe91",
       "sha256": "e8e28cd38c98dc9dac3376c685a5a915d6fb65cb0d33f2551a40bba38456ee56",
-      "targetSha256": "e8e28cd38c98dc9dac3376c685a5a915d6fb65cb0d33f2551a40bba38456ee56",
-      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md"
+      "targetSha256": "4e68ef906b7fa4b0ef21c7eacbeb875d5c6afc8ef9eb98c006ef427af78df621",
+      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
     },
     {
       "source": "gui/package.json",
       "target": "package.json",
       "sourceSha256": "eda10c6039a143519612f4e35a143fd2db5f451da710ba6d75638d64719e46b6",
       "sha256": "257e3b19f12bc74083b679a153ef81a58e8df427eda69fde3b052673ae7a2141",
-      "targetSha256": "257e3b19f12bc74083b679a153ef81a58e8df427eda69fde3b052673ae7a2141",
-      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md"
+      "targetSha256": "4a6bd2ea26772aef5c2293643ca793f7099d8e4042eccaab4acff4cbd8156e5f",
+      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
     },
     {
       "source": "gui/public/index.html",
@@ -243,16 +243,16 @@
       "target": "README.md",
       "sourceSha256": "a19410281ddec4fd317d8c6a9b9d20c19f0425d250dea3357b0a19a861881b58",
       "sha256": "dbd847319c79afdb59101536abc64986d218965f3d7adc7a4a20154a76367094",
-      "targetSha256": "dbd847319c79afdb59101536abc64986d218965f3d7adc7a4a20154a76367094",
-      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md"
+      "targetSha256": "7d5766e63ad70ca4206ef26e500cfa6700b9612cc942db06bb6e712909a44a08",
+      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
     },
     {
       "source": null,
       "target": "scripts/before-pack.cjs",
       "sourceSha256": null,
       "sha256": "a05f7a943ad4bbe11d75bc81758350a175b808566d1023bbf71f84249b1ce4b5",
-      "targetSha256": "a05f7a943ad4bbe11d75bc81758350a175b808566d1023bbf71f84249b1ce4b5",
-      "transformation": "created for extraction"
+      "targetSha256": "6ae95c79273cb25c3147b0f170c153798b74e43edc34485cc34ca4131a6238bb",
+      "transformation": "created for extraction; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
     },
     {
       "source": "gui/scripts/build-driver-archive.ps1",
@@ -293,16 +293,16 @@
       "target": "scripts/verify-artifacts.cjs",
       "sourceSha256": null,
       "sha256": "c3ef1623cba231fa8ba7ea432840ecf76f69e11cd17d8cfeeecc93ebfa6683db",
-      "targetSha256": "c3ef1623cba231fa8ba7ea432840ecf76f69e11cd17d8cfeeecc93ebfa6683db",
-      "transformation": "created for extraction"
+      "targetSha256": "a704656bfc5cf9d0802eb4d7bbb7c129bf874ce45d9811c2d896d0ca2f2d25b2",
+      "transformation": "created for extraction; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
     },
     {
       "source": null,
       "target": "scripts/verify-artifacts.test.cjs",
       "sourceSha256": null,
       "sha256": "982d1b403bf2143e7384d9a3cdd39677722de363eec119d05d15dfdcc548ea5c",
-      "targetSha256": "982d1b403bf2143e7384d9a3cdd39677722de363eec119d05d15dfdcc548ea5c",
-      "transformation": "created for extraction"
+      "targetSha256": "d1e4aab9f2dce49fd8b4216b69c35c3cf2b3101f714f31b30526bc6607c23fa1",
+      "transformation": "created for extraction; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
     },
     {
       "source": "gui/scripts/verify-release-artifacts.ps1",
@@ -823,18 +823,54 @@
       "target": "src/midi-model.js",
       "sourceSha256": null,
       "sha256": "f0ffbb02da00faf65c0accb0a50b2d9c7b0a869726082218c99470e2e66dc7b1",
-      "targetSha256": "f0ffbb02da00faf65c0accb0a50b2d9c7b0a869726082218c99470e2e66dc7b1",
+      "targetSha256": "5717098396c70c6b8cbe93aeda4ad2973c4e445f1f790c81408708152efcac6f",
       "status": "generated",
-      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31; Reference clock naming in the MIDI tab, 2026-10-31"
+      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31; Reference clock naming in the MIDI tab, 2026-10-31; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
     },
     {
       "source": null,
       "target": "src/midi-model.test.js",
       "sourceSha256": null,
       "sha256": "f695dc76e6116cb4cb528743a44369390f699130d3f60554617b0584554ed13a",
-      "targetSha256": "f695dc76e6116cb4cb528743a44369390f699130d3f60554617b0584554ed13a",
+      "targetSha256": "37a84f12e888f0b4c1933dc05a5b1ba404d5b661f482768713a46a8d34b26396",
       "status": "generated",
-      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31; Reference clock naming in the MIDI tab, 2026-10-31"
+      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31; Reference clock naming in the MIDI tab, 2026-10-31; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
+    },
+    {
+      "source": null,
+      "target": "RELEASE.md",
+      "sourceSha256": null,
+      "sha256": null,
+      "status": "generated",
+      "targetSha256": "eeabf89f80d4a40cee196c56914f3d36d565f69804b9d71faf55eaaab2d9136a",
+      "transformation": "; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
+    },
+    {
+      "source": null,
+      "target": "scripts/pin-engine.cjs",
+      "sourceSha256": null,
+      "sha256": null,
+      "status": "generated",
+      "targetSha256": "33a3dfb2cf14b289452711a340769e0c8af3a983ccc28ea25e7900095bc11eca",
+      "transformation": "; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
+    },
+    {
+      "source": null,
+      "target": "scripts/release-metadata.cjs",
+      "sourceSha256": null,
+      "sha256": null,
+      "status": "generated",
+      "targetSha256": "80e48e3340a7e4ec7ec32be182454a381f692adadc7bc02dea34c2c79b464db1",
+      "transformation": "; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
+    },
+    {
+      "source": null,
+      "target": "scripts/release-metadata.test.cjs",
+      "sourceSha256": null,
+      "sha256": null,
+      "status": "generated",
+      "targetSha256": "d75b45f241723fad21b9bd87cded0fc14ddcdd98c5444e14cda1b713f659f9d6",
+      "transformation": "; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
     }
   ],
   "excluded": [

@@ -5,6 +5,7 @@ const required = ['artifacts/backend/TimoxVirtualAsioEngine.exe', 'artifacts/bac
 const hash = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 function verify(root, packaged = false) {
     const lock = JSON.parse(fs.readFileSync(path.join(root, 'artifacts.lock.json'), 'utf8'));
+    if (lock.release) require('./release-metadata.cjs').checkEngine(root, lock);
     for (const name of required) {
         const item = lock.artifacts.find(entry => entry.path === name);
         if (!item?.revision || !/^[a-f0-9]{64}$/.test(item.sha256 || '')) throw new Error(`Unpinned artifact: ${name}`);
@@ -20,9 +21,20 @@ function verify(root, packaged = false) {
         if (packaged && hash(path.join(root, 'dist/win-unpacked/resources/backend', item.path.slice(4))) !== item.sha256)
             throw new Error(`Packaged schema hash mismatch: ${item.path}`);
     }
+    if (packaged && lock.release) {
+        for (const [source, target] of [
+            ['artifacts/backend/engine-build.json', 'dist/win-unpacked/resources/backend/engine-build.json'],
+            ['build/release-manifest.json', 'dist/win-unpacked/resources/release-manifest.json']
+        ]) {
+            if (hash(path.join(root, source)) !== hash(path.join(root, target)))
+                throw new Error(`Packaged release metadata mismatch: ${target}`);
+        }
+    }
 }
 module.exports = { verify };
 if (require.main === module) {
+    const root = path.resolve(__dirname, '..');
+    require('./release-metadata.cjs').checkSource(root, JSON.parse(fs.readFileSync(path.join(root, 'artifacts.lock.json'))));
     verify(path.resolve(__dirname, '..'), process.argv.includes('--packaged'));
     console.log('Pinned engine, PWAR and API artifacts verified.');
 }

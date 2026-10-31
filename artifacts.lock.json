@@ -5,11 +5,9 @@
     {
       "path": "artifacts/backend/TimoxVirtualAsioEngine.exe",
       "repository": "TimoxVAudioEngine",
-      "revision": "working-tree-manifest-sha256:4ff97b98ac4df82da2d0ddd9fcfb241bd5dd15220065bdae565e6c7e914d0f85",
-      "sha256": "da90a3c24d2bbb601ab259e0f531bdf78089b721a38e2715c122a5757bb6aded",
-      "sourcePath": "build/Release/TimoxVirtualAsioEngine.exe",
-      "sourceLastWriteTimeUtc": "2026-10-26T22:57:26.755Z",
-      "sizeBytes": 1509376
+      "revision": "5239c7e5c1ff0b1afb2f105fc3c97d38a938a53a",
+      "sha256": null,
+      "sourcePath": "build/Release/TimoxVirtualAsioEngine.exe"
     },
     {
       "path": "artifacts/backend/PwarAsioClient.exe",
@@ -24,11 +22,41 @@
   "schemas": [
     {
       "path": "api/openapi-v1.json",
-      "sha256": "208dc9c42be9eb0b9449ad89b612c0ecf399c2c478b5848ccc1798e4a7633073"
+      "sha256": "261a90ce3154ed879750489115e3538d7ac724e8e3c76b9434c20c60c92bc2f8"
     },
     {
       "path": "api/schemas/api-v1.json",
-      "sha256": "2eb0630bdb93b81b2061aa58556ae4cbbd90480e0d31b44106796b8a05d07302"
+      "sha256": "1e854f94156c4d40580c12112111e02e089ca9fea25e9902762c5a566f544198"
     }
-  ]
+  ],
+  "release": {
+    "channel": "alpha",
+    "guiVersion": "0.2.0-alpha.1",
+    "status": "awaiting-windows-build-and-qualification",
+    "driver": {
+      "repository": "timox/TimoxVasio",
+      "version": "1.2.7",
+      "revision": "d263c9470dd052af3bc0f0b43bf1b9611012171f",
+      "bundled": false
+    },
+    "engine": {
+      "repository": "timox/TimoxVAudioEngine",
+      "version": "1.3.0-alpha.1",
+      "revision": "5239c7e5c1ff0b1afb2f105fc3c97d38a938a53a",
+      "apiVersion": "1.1",
+      "windowsMidiServices": true
+    },
+    "pwar": {
+      "repository": "timox/Timox-Pwar",
+      "revision": "5a0f13e1d5724b0bab1933218c98a17c1df504fb",
+      "controlProtocolVersion": 1,
+      "audioContinuityQualified": false
+    },
+    "qualification": {
+      "windowsMidiBackend": "not-validated",
+      "fullWindowsSuite": "not-run-here",
+      "reactSuite": "known-failures",
+      "hardwareIntegration": "not-qualified"
+    }
+  }
 }
