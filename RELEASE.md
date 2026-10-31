@@ -7,6 +7,23 @@ ASIO driver remains **1.2.7** and is not installed or bundled by this portable a
 PWAR is tracked by source revision and control protocol v1, not a fabricated
 product version. Its audio continuity remains unqualified.
 
+## Verified Windows engine candidate
+
+The MIDI-enabled engine has now been built on Windows with Visual Studio 2026:
+[run 41239505040](https://github.com/timox/TimoxVAudioEngine/actions/runs/41239505040),
+source commit `3b511dda58d09e03683d5135fb3b98ec01ef80b7`. All **34 CTest tests** and
+the build-provenance test passed. The SDK archive was verified against Microsoft's
+published SHA-256. The matching executable and receipt are pinned in
+artifacts.lock.json; `npm run pin-engine` and the engine-specific checks pass.
+
+Executable SHA-256:
+`16d730afd3ebbdac0e24c73278f764de8d7016fea7d257d87ecefa66cbdcd0dc`.
+
+This validates compilation and isolated tests, not the preview runtime, physical
+MIDI devices or audio timing. The complete GUI package still requires its pinned
+PwarAsioClient.exe; it is absent from this cloud checkout. The old October 26
+engine must not be substituted for this candidate.
+
 `artifacts.lock.json` is the single assembly manifest: independent component
 versions, exact expected source revisions, feature flags, binary/schema hashes
 and explicit qualification gaps. `package.json` owns the GUI product version;
@@ -25,8 +42,8 @@ not imply that the optional MIDI backend is present.
    TimoxVirtualAsioEngine.exe and engine-build.json together to artifacts/backend.
 3. Run `npm run pin-engine`. This validates the receipt against the expected
    source commit, version, API, MIDI option and actual binary SHA-256, then updates
-   only the engine artifact pin. The previous October 26 binary is deliberately
-   unpinned because it does not implement this MIDI candidate.
+   only the engine artifact pin. The previous October 26 binary cannot satisfy
+   this MIDI candidate; the current pin identifies the verified build above.
 4. Supply the existing pinned PwarAsioClient.exe. A rebuilt/different PWAR client
    needs its own verified provenance and a coordinated engine supervisor hash
    update; do not simply overwrite its hash. Refresh schema snapshots/pins only

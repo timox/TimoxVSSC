@@ -49,8 +49,8 @@
       "target": "artifacts.lock.json",
       "sourceSha256": null,
       "sha256": "953260b89b36e4c5c9439df56c9bd994a95b27618a292b6ccdd2bbd003786b9b",
-      "targetSha256": "f79740ff0b03ec9cf064ce12e44ac1416640d54d2e1a9391e6d11dbdd4b54533",
-      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31",
+      "targetSha256": "99bcfd9176e166cc51c631c6eadc208f44681b9a3fbf312a10ad7553206e0cd6",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31; Pin Windows MIDI engine verified by CI run 41239505040, 2026-10-31",
       "status": "generated"
     },
     {
@@ -842,8 +842,8 @@
       "sourceSha256": null,
       "sha256": null,
       "status": "generated",
-      "targetSha256": "eeabf89f80d4a40cee196c56914f3d36d565f69804b9d71faf55eaaab2d9136a",
-      "transformation": "; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31"
+      "targetSha256": "5e53b7a8393b16e7f8b4124191272b039bafa548ae5295e0dd24ca85931e255b",
+      "transformation": "; Independent component versions, release assembly provenance and MIDI tempo preservation, 2026-10-31; Release assembly provenance and MIDI tempo preservation, 2026-10-31; Pin Windows MIDI engine verified by CI run 41239505040, 2026-10-31"
     },
     {
       "source": null,
