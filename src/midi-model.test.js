@@ -1,5 +1,5 @@
 import {
-    buildMidiNodes, referenceClockLabel, clockStateLabel, formatBpm, isActive, loadWidgets, observationsByPort, saveWidgets, slugify,
+    buildMidiNodes, referenceClockLabel, referenceClockSourceClass, referenceClockSourceLabel, clockStateLabel, formatBpm, isActive, loadWidgets, observationsByPort, saveWidgets, slugify,
     suggestedClockPort, validPortName, withApplicationPort, withRoute, withoutApplicationPort, WIDGET_STORAGE_KEY
 } from './midi-model';
 
@@ -100,8 +100,12 @@ test('the reference clock label names the sound card or software clock frequency
     expect(referenceClockLabel({ source: 'asio', nominalSampleRate: 48000, driftPpm: null })).toBe('Reference clock: sound card 48000 Hz, measuring…');
     expect(referenceClockLabel({ source: 'asio', measuredSampleRate: 47999.04, driftPpm: -20 }))
         .toBe('Reference clock: sound card 47999.04 Hz (−20.0 ppm vs Windows counter)');
+    expect(referenceClockLabel({ source: 'asio', measuredSampleRate: 47999.04, driftPpm: -20, measuredOverSeconds: 31.2 }))
+        .toBe('Reference clock: sound card 47999.04 Hz (−20.0 ppm vs Windows counter · measured 31.2 s)');
     expect(referenceClockLabel({ source: 'software', measuredSampleRate: 48000, driftPpm: 0 }))
         .toBe('Reference clock: software clock 48000.00 Hz (+0.0 ppm vs Windows counter)');
+    expect(referenceClockSourceLabel({ source: 'asio' })).toBe('ASIO reference');
+    expect(referenceClockSourceClass({ source: 'software' })).toBe('software');
     const nodes = buildMidiNodes({ ports: [{ id: 'midi:clock:engine', kind: 'engineClock', source: true }] });
     expect(nodes[0]).toEqual(expect.objectContaining({ id: 'midi-engine-clock', kind: 'engineClock' }));
     expect(nodes[0].ports[0].side).toBe('source');

@@ -4,7 +4,8 @@ import { ReactFlow, Background, Handle, Position, useNodesState, useReactFlow } 
 import '@xyflow/react/dist/style.css';
 import './MidiWorkspace.css';
 import {
-    ENGINE_CLOCK_PORT, MESSAGE_CATEGORIES, VIRTUAL_PREFIX, buildMidiNodes, referenceClockLabel, clockStateLabel, defaultPosition, emptyConfiguration,
+    ENGINE_CLOCK_PORT, MESSAGE_CATEGORIES, VIRTUAL_PREFIX, buildMidiNodes, referenceClockLabel, referenceClockSourceClass,
+    referenceClockSourceLabel, clockStateLabel, defaultPosition, emptyConfiguration,
     formatBpm, isActive, loadLayout, loadWidgets, observationsByPort, portObservation, routeStatusById,
     saveLayout, saveWidgets, slugify, sourcePorts, suggestedClockPort, validPortName, widgetNodeId,
     withApplicationPort, withRoute, withUpdatedRoute, withoutApplicationPort, withoutRoute
@@ -286,9 +287,11 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             <small>{referenceClock?.source === 'asio' ? 'Counted in sound card samples'
                 : referenceClock?.source === 'software' ? 'Counted in software clock samples' : 'Reference clock not running'}</small></div>
         <div className="midi-engine-clock-body">
-            <output className="midi-engine-clock-bpm">{(engineClock?.bpm ?? 120).toFixed(1)}</output> BPM
+            <output className="midi-engine-clock-bpm">{(engineClock?.bpm ?? 120).toFixed(1)}</output>
+            <span className="midi-engine-clock-tempo-label">output tempo</span>
             <span className="midi-engine-clock-state">{engineClock?.waitingForReferenceClock ? 'Waiting for the reference clock'
-                : engineClock?.running ? 'Running' : 'Stopped'}</span>
+                : engineClock?.running ? 'Sending clock' : referenceClock?.source && referenceClock.source !== 'none'
+                    ? 'Listening to reference clock' : 'Reference clock unavailable'}</span>
         </div>
         <ul>{node.ports.map(renderPort)}</ul>
     </div>;
@@ -389,7 +392,10 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                 {busy ? 'Applying…' : unavailable ? `MIDI unavailable${midi.error ? `: ${midi.error}` : ''}` :
                     midi ? `${graphNodes.length} blocks · ${configuration.routes.length} connections` +
                         (clockSources.length ? ` · clock from ${clockSources.map(port => portLabel(port.portId)).join(', ')}` : '') : 'Loading…'}
-                {referenceClock && <div className="midi-reference-clock">{referenceClockLabel(referenceClock)}</div>}
+                {referenceClock && <div className={`midi-reference-clock ${referenceClockSourceClass(referenceClock)}`}>
+                    <span className="midi-reference-clock-badge">{referenceClockSourceLabel(referenceClock)}</span>
+                    <span>{referenceClockLabel(referenceClock)}</span>
+                </div>}
             </div></div>
         {error && <p className="notice midi-error" role="alert">{error}</p>}
         <div className="patchbay-flow midi-flow" role="region" aria-label="MIDI connections" ref={graphRef} tabIndex="0"

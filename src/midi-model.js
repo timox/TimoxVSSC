@@ -186,7 +186,21 @@ export function referenceClockLabel(referenceClock) {
     const clock = referenceClock.source === 'software' ? 'software clock' : 'sound card';
     if (typeof referenceClock.driftPpm !== 'number') return `Reference clock: ${clock} ${referenceClock.nominalSampleRate} Hz, measuring…`;
     const sign = referenceClock.driftPpm >= 0 ? '+' : '−';
-    return `Reference clock: ${clock} ${referenceClock.measuredSampleRate.toFixed(2)} Hz (${sign}${Math.abs(referenceClock.driftPpm).toFixed(1)} ppm vs Windows counter)`;
+    const duration = typeof referenceClock.measuredOverSeconds === 'number' && referenceClock.measuredOverSeconds > 0
+        ? ` · measured ${referenceClock.measuredOverSeconds.toFixed(1)} s` : '';
+    return `Reference clock: ${clock} ${referenceClock.measuredSampleRate.toFixed(2)} Hz (${sign}${Math.abs(referenceClock.driftPpm).toFixed(1)} ppm vs Windows counter${duration})`;
+}
+
+export function referenceClockSourceLabel(referenceClock) {
+    if (referenceClock?.source === 'asio') return 'ASIO reference';
+    if (referenceClock?.source === 'software') return 'Software reference';
+    return 'No audio reference';
+}
+
+export function referenceClockSourceClass(referenceClock) {
+    if (referenceClock?.source === 'asio') return 'asio';
+    if (referenceClock?.source === 'software') return 'software';
+    return 'none';
 }
 
 export function defaultPosition(node, index) {

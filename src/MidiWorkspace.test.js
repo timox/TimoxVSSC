@@ -198,13 +198,15 @@ test('the engine clock follows the reference clock and is driven from its block 
     const view = await mount(api);
     try {
         expect(view.container.querySelector('.midi-reference-clock').textContent)
-            .toBe('Reference clock: sound card 48000.48 Hz (+10.0 ppm vs Windows counter)');
+            .toContain('ASIO referenceReference clock: sound card 48000.48 Hz (+10.0 ppm vs Windows counter · measured 30.0 s)');
         const block = view.container.querySelector('[data-flow-node="midi-engine-clock"]');
         expect(block.textContent).toContain('Counted in sound card samples');
         expect(block.textContent).toContain('120.0');
+        expect(block.textContent).toContain('output tempo');
+        expect(block.textContent).toContain('Listening to reference clock');
         await choose(block, 'Start clock');
         expect(api.setMidiClock).toHaveBeenLastCalledWith({ transport: 'start' });
-        expect(view.container.querySelector('[data-flow-node="midi-engine-clock"]').textContent).toContain('Running');
+        expect(view.container.querySelector('[data-flow-node="midi-engine-clock"]').textContent).toContain('Sending clock');
         await choose(view.container.querySelector('[data-flow-node="midi-engine-clock"]'), 'Set tempo…');
         await act(async () => Simulate.change(document.querySelector('[role="dialog"] input'), { target: { value: '98.5' } }));
         await act(async () => Simulate.click(dialogButton('Save')));
@@ -231,7 +233,8 @@ test('without a running reference clock the engine clock cannot be started and s
         engineClock: { bpm: 120, running: true, waitingForReferenceClock: true, ticks: 40, transport: 'start' } });
     const view = await mount(api);
     try {
-        expect(view.container.querySelector('.midi-reference-clock').textContent).toBe('Reference clock: not running (start audio)');
+        expect(view.container.querySelector('.midi-reference-clock').textContent)
+            .toBe('No audio referenceReference clock: not running (start audio)');
         const block = view.container.querySelector('[data-flow-node="midi-engine-clock"]');
         expect(block.textContent).toContain('Waiting for the reference clock');
         await act(async () => Simulate.contextMenu(block, { clientX: 10, clientY: 10 }));
