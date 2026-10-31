@@ -6,9 +6,9 @@
       "path": "artifacts/backend/TimoxVirtualAsioEngine.exe",
       "repository": "TimoxVAudioEngine",
       "revision": "78ec5f9734389382215f706799372015fa7a061c",
-      "sha256": "a037bf3d27ac9998272e609f75b15efb68064d6aeff323e855dd83599b4227f5",
+      "sha256": "76d9fc4de85f613db866d86c8de403c3007e4c0a9c793518c58a777b54ef5100",
       "sourcePath": "build/Release/TimoxVirtualAsioEngine.exe",
-      "sizeBytes": 1774592
+      "sizeBytes": 1775104
     },
     {
       "path": "artifacts/backend/PwarAsioClient.exe",
