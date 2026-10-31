@@ -21,6 +21,8 @@ contextBridge.exposeInMainWorld('vasio', {
     getNetworkAddresses: () => ipcRenderer.invoke('system:get-network-addresses'),
     getApplicationProfiles: () => ipcRenderer.invoke('api:get-application-profiles'),
     replaceApplicationProfiles: profiles => ipcRenderer.invoke('api:replace-application-profiles', profiles),
+    getMidi: () => ipcRenderer.invoke('api:get-midi'),
+    replaceMidiConfiguration: configuration => ipcRenderer.invoke('api:replace-midi-configuration', configuration),
     getDiagnostics: limit => ipcRenderer.invoke('api:get-diagnostics', limit),
     setDiagnosticLevel: level => ipcRenderer.invoke('api:set-diagnostic-level', level),
     httpRequest: (method, path, body) => ipcRenderer.invoke('api:http-request', method, path, body),

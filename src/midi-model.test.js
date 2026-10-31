@@ -1,0 +1,85 @@
+import {
+    buildMidiNodes, clockStateLabel, formatBpm, isActive, loadWidgets, observationsByPort, saveWidgets, slugify,
+    suggestedClockPort, validPortName, withApplicationPort, withRoute, withoutApplicationPort, WIDGET_STORAGE_KEY
+} from './midi-model';
+
+const midi = {
+    available: true,
+    configuration: {
+        virtualPorts: [{ id: 'bitwig', name: 'Bitwig', input: true, output: false }],
+        routes: [{ id: 'r1', source: 'midi:virtual:bitwig', destination: 'midi:port:2:usb' }]
+    },
+    ports: [
+        { id: 'midi:virtual:bitwig', name: 'Bitwig', kind: 'virtual', source: true, destination: false, online: true, open: true },
+        { id: 'midi:port:1:usb', name: 'UM-ONE In', kind: 'port', endpointId: 'usb', endpointName: 'UM-ONE', group: 1,
+            source: true, destination: false, online: true, open: true,
+            clock: { ticks: 10, running: true, bpm: 98.5, echoSuspected: false } },
+        { id: 'midi:port:2:usb', name: 'UM-ONE Out', kind: 'port', endpointId: 'usb', endpointName: 'UM-ONE', group: 2,
+            source: false, destination: true, online: true, open: true },
+        { id: 'midi:port:1:gone', name: '', kind: 'port', endpointId: 'gone', group: 1, source: false, destination: false, online: false }
+    ],
+    routes: [{ id: 'r1', active: true, forwarded: 3, filtered: 0 }]
+};
+
+test('application ports show only enabled directions and devices group their MIDI 1.0 ports', () => {
+    const nodes = buildMidiNodes(midi);
+    const app = nodes.find(node => node.id === 'midi-application:bitwig');
+    expect(app.ports.map(port => [port.name, port.side])).toEqual([['Bitwig In', 'source']]);
+    const device = nodes.find(node => node.id === 'midi-device:usb');
+    expect(device.label).toBe('UM-ONE');
+    expect(device.ports.map(port => [port.name, port.side])).toEqual([['UM-ONE In', 'source'], ['UM-ONE Out', 'destination']]);
+    const gone = nodes.find(node => node.id === 'midi-device:gone');
+    expect(gone.offline).toBe(true);
+    expect(gone.ports[0].side).toBe('absent');
+});
+
+test('configuration edits never duplicate routes and removing a port removes its routes', () => {
+    const configuration = midi.configuration;
+    expect(withRoute(configuration, 'midi:virtual:bitwig', 'midi:port:2:usb', 1)).toBe(configuration);
+    const added = withRoute(configuration, 'midi:port:1:usb', 'midi:virtual:bitwig', 1000);
+    expect(added.routes).toHaveLength(2);
+    expect(added.routes[1]).toEqual({ id: 'midi-rs', source: 'midi:port:1:usb', destination: 'midi:virtual:bitwig', enabled: true });
+    expect(withoutApplicationPort(added, 'bitwig')).toEqual({ virtualPorts: [], routes: [] });
+    const renamed = withApplicationPort(configuration, { id: 'bitwig', name: 'Bitwig 5', input: true, output: true });
+    expect(renamed.virtualPorts).toEqual([{ id: 'bitwig', name: 'Bitwig 5', input: true, output: true }]);
+});
+
+test('names and ids follow the engine limits', () => {
+    expect(slugify('Ableton Live 12 Suite!', new Set())).toBe('ableton-live-12-suit');
+    expect(slugify('Bitwig', new Set(['bitwig']))).toBe('bitwig-2');
+    expect(slugify('Éditeur', new Set())).toBe('editeur');
+    expect(validPortName('Bitwig')).toBe(true);
+    expect(validPortName('Éditeur')).toBe(false);
+    expect(validPortName(' Bitwig')).toBe(false);
+    expect(validPortName('x'.repeat(25))).toBe(false);
+});
+
+test('clock display separates running, measuring, echo and stopped states', () => {
+    expect(formatBpm({ running: true, bpm: 120 })).toBe('120.0');
+    expect(formatBpm({ running: true, bpm: null })).toBe('…');
+    expect(formatBpm({ running: false, bpm: 120 })).toBe('—');
+    expect(clockStateLabel(null)).toBe('No clock received');
+    expect(clockStateLabel({ ticks: 4, running: false })).toBe('Clock stopped');
+    expect(clockStateLabel({ ticks: 4, running: true, echoSuspected: true })).toBe('Possible echo of the patchbay clock');
+    expect(clockStateLabel({ ticks: 4, running: true, bpm: null })).toBe('Measuring tempo');
+    expect(isActive(1000, 1200)).toBe(true);
+    expect(isActive(1000, 1400)).toBe(false);
+    expect(isActive(null, 1000)).toBe(false);
+});
+
+test('the suggested BPM port is a real clock source, not an echo', () => {
+    expect(suggestedClockPort(midi, {})).toBe('midi:port:1:usb');
+    const observations = observationsByPort({ ports: [
+        { portId: 'midi:port:1:usb', clock: { running: true, echoSuspected: true, ticks: 5 } },
+        { portId: 'midi:virtual:bitwig', clock: { running: true, echoSuspected: false, ticks: 5 } }] });
+    expect(suggestedClockPort(midi, observations)).toBe('midi:virtual:bitwig');
+});
+
+test('widgets are kept in local storage and invalid data is ignored', () => {
+    const values = {};
+    const storage = { getItem: key => values[key] ?? null, setItem: (key, value) => { values[key] = value; } };
+    saveWidgets(storage, [{ id: 'w1', portId: 'midi:port:1:usb' }]);
+    expect(loadWidgets(storage)).toEqual([{ id: 'w1', portId: 'midi:port:1:usb' }]);
+    values[WIDGET_STORAGE_KEY] = '{broken';
+    expect(loadWidgets(storage)).toEqual([]);
+});

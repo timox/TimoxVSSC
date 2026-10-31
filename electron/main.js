@@ -153,6 +153,9 @@ ipcMain.handle('system:get-network-addresses', () => Object.entries(os.networkIn
     .map(({ name, address }) => ({ name, address }))
     .filter((entry, index, addresses) => addresses.findIndex(candidate => candidate.name === entry.name && candidate.address === entry.address) === index));
 ipcMain.handle('api:get-application-profiles', async () => (await getApiClient()).getApplicationProfiles());
+ipcMain.handle('api:get-midi', async () => (await getApiClient()).getMidi());
+ipcMain.handle('api:replace-midi-configuration', async (_event, configuration) =>
+    (await getApiClient()).replaceMidiConfiguration(configuration));
 ipcMain.handle('api:replace-application-profiles', async (_event, profiles) =>
     (await getApiClient()).replaceApplicationProfiles(profiles));
 ipcMain.handle('api:get-diagnostics', async (_event, limit) => (await getApiClient()).getDiagnostics(limit));

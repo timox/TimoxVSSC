@@ -30,18 +30,18 @@
       "source": "api/openapi-v1.json",
       "target": "api/openapi-v1.json",
       "sourceSha256": "243d01272e07b00cfd52819812ba3f96ec083d57207b4498b3490805081ef392",
-      "sha256": "208dc9c42be9eb0b9449ad89b612c0ecf399c2c478b5848ccc1798e4a7633073",
-      "targetSha256": "208dc9c42be9eb0b9449ad89b612c0ecf399c2c478b5848ccc1798e4a7633073",
-      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "sha256": "98d2107fc5931870e0348d822518454c90d6da0ed626b6472b3ebe6b1b2a8ea9",
+      "targetSha256": "98d2107fc5931870e0348d822518454c90d6da0ed626b6472b3ebe6b1b2a8ea9",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26; MIDI tab and BPM display, 2026-10-31",
       "status": "modified"
     },
     {
       "source": "api/schemas/api-v1.json",
       "target": "api/schemas/api-v1.json",
       "sourceSha256": "113b1ea91f7635457cd40881cfe139e595cf6ab02e38533c99e03670e3140bf0",
-      "sha256": "2eb0630bdb93b81b2061aa58556ae4cbbd90480e0d31b44106796b8a05d07302",
-      "targetSha256": "2eb0630bdb93b81b2061aa58556ae4cbbd90480e0d31b44106796b8a05d07302",
-      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "sha256": "1a364a194f012b2ee8276330a45c92b3289c9de3b594d6bbfc7e1e6df683c59b",
+      "targetSha256": "1a364a194f012b2ee8276330a45c92b3289c9de3b594d6bbfc7e1e6df683c59b",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26; MIDI tab and BPM display, 2026-10-31",
       "status": "modified"
     },
     {
@@ -65,9 +65,9 @@
       "source": "gui/electron/api-client.js",
       "target": "electron/api-client.js",
       "sourceSha256": "a3abc866b7ae225111adb9326e9a684e2b75716a076b999192b1f3a22817a80a",
-      "sha256": "a3abc866b7ae225111adb9326e9a684e2b75716a076b999192b1f3a22817a80a",
-      "targetSha256": "a3abc866b7ae225111adb9326e9a684e2b75716a076b999192b1f3a22817a80a",
-      "transformation": "verbatim import"
+      "sha256": "30c48ea480fa438320d783e2419d5f12575beca5d305be702d686389dec08380",
+      "targetSha256": "30c48ea480fa438320d783e2419d5f12575beca5d305be702d686389dec08380",
+      "transformation": "verbatim import; MIDI tab and BPM display, 2026-10-31"
     },
     {
       "source": "gui/electron/api-client.test.js",
@@ -121,17 +121,17 @@
       "source": "gui/electron/main.js",
       "target": "electron/main.js",
       "sourceSha256": "af594d82d70b8244ecee8533ae445eff11f723ac833e89bc5d48ce5450a76034",
-      "sha256": "8a8ee81709f64bf4850fa562319bed3db99baaaa28f2a4be1394074b1a19052f",
-      "targetSha256": "8a8ee81709f64bf4850fa562319bed3db99baaaa28f2a4be1394074b1a19052f",
-      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md"
+      "sha256": "1c5dd392a683c2c78aba5c87070615611437ba4d48f12645ccd323c0e985326e",
+      "targetSha256": "1c5dd392a683c2c78aba5c87070615611437ba4d48f12645ccd323c0e985326e",
+      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md; MIDI tab and BPM display, 2026-10-31"
     },
     {
       "source": "gui/electron/preload.js",
       "target": "electron/preload.js",
       "sourceSha256": "3dd2d2cd55055f5207f4934882f033c720994c7454f354ecc355437cb2d5e509",
-      "sha256": "3dd2d2cd55055f5207f4934882f033c720994c7454f354ecc355437cb2d5e509",
-      "targetSha256": "3dd2d2cd55055f5207f4934882f033c720994c7454f354ecc355437cb2d5e509",
-      "transformation": "verbatim import"
+      "sha256": "30580d96b0a76ee9e4e2412952245c5401c3fc768daafbefc5812db76419350b",
+      "targetSha256": "30580d96b0a76ee9e4e2412952245c5401c3fc768daafbefc5812db76419350b",
+      "transformation": "verbatim import; MIDI tab and BPM display, 2026-10-31"
     },
     {
       "source": "gui/electron-builder.tvsd.json",
@@ -145,17 +145,17 @@
       "source": "gui/GUI_GUIDE.en.md",
       "target": "GUI_GUIDE.en.md",
       "sourceSha256": "0baf1a05da97e690e48b32248fbeee5cf2b365d59322c42ab555100c10b2fe8d",
-      "sha256": "3cb75c5c3c214524bcaa1a49c00b440a687efdb1fc12ccbeec281f4c42c59779",
-      "targetSha256": "3cb75c5c3c214524bcaa1a49c00b440a687efdb1fc12ccbeec281f4c42c59779",
-      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md"
+      "sha256": "ec58e967c5705eb5704eec1298df640d8a760f2553caa35dceb38dbe8daaffa3",
+      "targetSha256": "ec58e967c5705eb5704eec1298df640d8a760f2553caa35dceb38dbe8daaffa3",
+      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md; MIDI tab and BPM display, 2026-10-31"
     },
     {
       "source": "gui/GUI_GUIDE.md",
       "target": "GUI_GUIDE.md",
       "sourceSha256": "3642ab7548f3ba121aee8ed43a4a2b6dc0eddd15e85f6cf1fa001d0ad0e715ab",
-      "sha256": "c8960fdd02fe1db8a66a651cc2d4e4f27e3be366b40671462072549f0e4faab6",
-      "targetSha256": "c8960fdd02fe1db8a66a651cc2d4e4f27e3be366b40671462072549f0e4faab6",
-      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md"
+      "sha256": "fb869312060a2792b6b6a0627d727f1966771b73c8753da4827a78c07d7d7e9c",
+      "targetSha256": "fb869312060a2792b6b6a0627d727f1966771b73c8753da4827a78c07d7d7e9c",
+      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md; MIDI tab and BPM display, 2026-10-31"
     },
     {
       "source": "gui/INTEGRATION.en.md",
@@ -365,9 +365,9 @@
       "source": "gui/src/App.js",
       "target": "src/App.js",
       "sourceSha256": "b06bb398673ee0bdc625fe5c0206941e2c2d63fed654ab58cb8b0dfeefbfcc22",
-      "sha256": "92975553664f1c4e97696aad0bd9bf7de77620ed61831339d271c5b85ee08580",
-      "targetSha256": "92975553664f1c4e97696aad0bd9bf7de77620ed61831339d271c5b85ee08580",
-      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26",
+      "sha256": "e6da21e76c706ca2af10bde58f6d22521e9c855c974f0922f03cc01ff8baa9fa",
+      "targetSha256": "e6da21e76c706ca2af10bde58f6d22521e9c855c974f0922f03cc01ff8baa9fa",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26; MIDI tab and BPM display, 2026-10-31",
       "status": "modified"
     },
     {
@@ -790,6 +790,51 @@
       "targetSha256": "0bbc839a8901a90630e77b4ac148e451aab37f309c4fa9cc6b68f1f7a0b744c4",
       "status": "generated",
       "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26"
+    },
+    {
+      "source": null,
+      "target": "src/MidiWorkspace.css",
+      "sourceSha256": null,
+      "sha256": "76258615554f018d28f07e18b643b10094e08715dfbdb896bf851cf8c4bb56f1",
+      "targetSha256": "76258615554f018d28f07e18b643b10094e08715dfbdb896bf851cf8c4bb56f1",
+      "status": "generated",
+      "transformation": "MIDI tab and BPM display, 2026-10-31"
+    },
+    {
+      "source": null,
+      "target": "src/MidiWorkspace.js",
+      "sourceSha256": null,
+      "sha256": "770ada3f41f869da0e271f78e64ed58c311af4fb631ced96006b0a7d6c6d393a",
+      "targetSha256": "770ada3f41f869da0e271f78e64ed58c311af4fb631ced96006b0a7d6c6d393a",
+      "status": "generated",
+      "transformation": "MIDI tab and BPM display, 2026-10-31"
+    },
+    {
+      "source": null,
+      "target": "src/MidiWorkspace.test.js",
+      "sourceSha256": null,
+      "sha256": "c6a151e342c2a3a0359a444aab5f471f93e4d0eb5f8381f9e272e7ebbb32d1c2",
+      "targetSha256": "c6a151e342c2a3a0359a444aab5f471f93e4d0eb5f8381f9e272e7ebbb32d1c2",
+      "status": "generated",
+      "transformation": "MIDI tab and BPM display, 2026-10-31"
+    },
+    {
+      "source": null,
+      "target": "src/midi-model.js",
+      "sourceSha256": null,
+      "sha256": "ef142df3c624e36705b6a53c0453a1ffe071f3b5b8755496a7b27c6ed25a2ccf",
+      "targetSha256": "ef142df3c624e36705b6a53c0453a1ffe071f3b5b8755496a7b27c6ed25a2ccf",
+      "status": "generated",
+      "transformation": "MIDI tab and BPM display, 2026-10-31"
+    },
+    {
+      "source": null,
+      "target": "src/midi-model.test.js",
+      "sourceSha256": null,
+      "sha256": "c8a71c3219719940ba7801caddc6047aa12b3daec1b6a7edb8b945b4cdab51d2",
+      "targetSha256": "c8a71c3219719940ba7801caddc6047aa12b3daec1b6a7edb8b945b4cdab51d2",
+      "status": "generated",
+      "transformation": "MIDI tab and BPM display, 2026-10-31"
     }
   ],
   "excluded": [
