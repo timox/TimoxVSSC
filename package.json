@@ -19,7 +19,8 @@
     "pack": "npm run release-preflight && electron-builder --dir && npm run release-postflight",
     "dist": "npm run electron-build",
     "release-metadata": "node scripts/release-metadata.cjs",
-    "pin-engine": "node scripts/pin-engine.cjs"
+    "pin-engine": "node scripts/pin-engine.cjs",
+    "pin-pwar": "node scripts/pin-pwar.cjs"
   },
   "dependencies": {
     "@xyflow/react": "^12.12.0",

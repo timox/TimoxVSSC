@@ -5,7 +5,10 @@ const required = ['artifacts/backend/TimoxVirtualAsioEngine.exe', 'artifacts/bac
 const hash = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 function verify(root, packaged = false) {
     const lock = JSON.parse(fs.readFileSync(path.join(root, 'artifacts.lock.json'), 'utf8'));
-    if (lock.release) require('./release-metadata.cjs').checkEngine(root, lock);
+    if (lock.release) {
+        require('./release-metadata.cjs').checkEngine(root, lock);
+        require('./release-metadata.cjs').checkPwar(root, lock);
+    }
     for (const name of required) {
         const item = lock.artifacts.find(entry => entry.path === name);
         if (!item?.revision || !/^[a-f0-9]{64}$/.test(item.sha256 || '')) throw new Error(`Unpinned artifact: ${name}`);
@@ -24,6 +27,7 @@ function verify(root, packaged = false) {
     if (packaged && lock.release) {
         for (const [source, target] of [
             ['artifacts/backend/engine-build.json', 'dist/win-unpacked/resources/backend/engine-build.json'],
+            ['artifacts/backend/pwar-build.json', 'dist/win-unpacked/resources/backend/pwar-build.json'],
             ['build/release-manifest.json', 'dist/win-unpacked/resources/release-manifest.json']
         ]) {
             if (hash(path.join(root, source)) !== hash(path.join(root, target)))

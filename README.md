@@ -4,6 +4,8 @@ Next development candidate: **0.2.0-alpha.1**, paired with engine
 **1.3.0-alpha.1** (API **1.1**, MIDI backend enabled). The external ASIO driver
 remains **1.2.7**. See [RELEASE.md](RELEASE.md) and `artifacts.lock.json` for the
 assembly, source revisions and outstanding binary/runtime validation.
+The bundled PWAR candidate is independently versioned **0.1.0-alpha.1**;
+its control protocol remains **v1**.
 
 Portable control preview extracted from TimoxVasio. The technical engine API and driver identity remain unchanged. See [MIGRATION.md](MIGRATION.md) for provenance and validation.
 

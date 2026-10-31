@@ -4,25 +4,33 @@ This repository's next candidate is **TimoxVSSC 0.2.0-alpha.1**, not the old
 combined TimoxVasio 1.2.7 package. It requires engine **1.3.0-alpha.1**, API **1.1**,
 and a Windows MIDI Services enabled build for its MIDI workspace. The external
 ASIO driver remains **1.2.7** and is not installed or bundled by this portable app.
-PWAR is tracked by source revision and control protocol v1, not a fabricated
-product version. Its audio continuity remains unqualified.
+The bundled PWAR candidate is independently versioned **0.1.0-alpha.1**, with
+control protocol **v1**. Its audio continuity remains unqualified.
 
-## Verified Windows engine candidate
+## Verified component builds
 
-The MIDI-enabled engine has now been built on Windows with Visual Studio 2026:
-[run 41239505040](https://github.com/timox/TimoxVAudioEngine/actions/runs/41239505040),
-source commit `3b511dda58d09e03683d5135fb3b98ec01ef80b7`. All **34 CTest tests** and
-the build-provenance test passed. The SDK archive was verified against Microsoft's
-published SHA-256. The matching executable and receipt are pinned in
-artifacts.lock.json; `npm run pin-engine` and the engine-specific checks pass.
+- **PWAR 0.1.0-alpha.1**, source `7179c868e7110ae90fbe5bfd24eb1f0f56f154e0`:
+  [Windows/Linux run 41240762850](https://github.com/timox/Timox-Pwar/actions/runs/41240762850).
+  Windows **22/22** and Linux **23/23** CTest tests passed. The Windows client,
+  Linux library/backends and their clean-source receipts are available as artifacts.
+- **Engine 1.3.0-alpha.1**, source `78ec5f9734389382215f706799372015fa7a061c`:
+  [Windows run 41240930939](https://github.com/timox/TimoxVAudioEngine/actions/runs/41240930939).
+  MIDI-enabled compilation, **34/34** CTest tests and the provenance test passed.
+  This build requires the exact PWAR version/commit/hash above; it supersedes the
+  initial MIDI engine built before the versioned PWAR client.
 
-Executable SHA-256:
-`16d730afd3ebbdac0e24c73278f764de8d7016fea7d257d87ecefa66cbdcd0dc`.
+Verified Windows SHA-256:
 
-This validates compilation and isolated tests, not the preview runtime, physical
-MIDI devices or audio timing. The complete GUI package still requires its pinned
-PwarAsioClient.exe; it is absent from this cloud checkout. The old October 26
-engine must not be substituted for this candidate.
+| Binary | SHA-256 |
+|---|---|
+| TimoxVirtualAsioEngine.exe | `a037bf3d27ac9998272e609f75b15efb68064d6aeff323e855dd83599b4227f5` |
+| PwarAsioClient.exe | `c0b9287c5c19efc9906fe80b748959a36cf93b1c47cd9b87f49a338062476b6d` |
+
+Both executables and receipts are pinned in artifacts.lock.json. The complete
+`npm run release-preflight` passes for these local inputs. This validates binary
+provenance and isolated tests, not real MIDI/audio hardware, PWAR continuity,
+a final portable GUI package or publication. PWAR's documented discontinuity
+remains unresolved; existing React suite failures are listed below.
 
 `artifacts.lock.json` is the single assembly manifest: independent component
 versions, exact expected source revisions, feature flags, binary/schema hashes
@@ -44,10 +52,11 @@ not imply that the optional MIDI backend is present.
    source commit, version, API, MIDI option and actual binary SHA-256, then updates
    only the engine artifact pin. The previous October 26 binary cannot satisfy
    this MIDI candidate; the current pin identifies the verified build above.
-4. Supply the existing pinned PwarAsioClient.exe. A rebuilt/different PWAR client
-   needs its own verified provenance and a coordinated engine supervisor hash
-   update; do not simply overwrite its hash. Refresh schema snapshots/pins only
-   from the selected engine source revision.
+4. Supply PwarAsioClient.exe and pwar-build.json from the selected clean PWAR
+   source revision, then run `npm run pin-pwar`. The engine must be rebuilt with
+   that same client hash. Its receipt declares the required PWAR product version,
+   source commit and SHA-256; preflight checks them against the bundled client.
+   Refresh schema snapshots/pins only from the selected engine source revision.
 5. Run `npm ci`, `npm run release-metadata`, `npm run contract-test`,
    `npm run electron-test`, `CI=true npm run react-test -- --watchAll=false --runInBand`
    and `npm run react-build`. Record failures honestly: four existing React suites
@@ -72,7 +81,7 @@ own final hash).
 | Public combined 1.2.7 | ASIO driver, routing engine, Control GUI, API 1.0 | Historical published release |
 | Extracted audio baseline | Software clock, WASAPI bridges, PWAR supervisor, API 1.1 | Existing bounded tests/hardware observations; no blanket qualification |
 | Supervision baseline | Engine-owned adherents/nodes/links, observations and corresponding GUI | Focused tests; freshness limits remain |
-| This paired MIDI candidate | MIDI 1.0 ports/routes, BPM, reclocking to the audio reference, separate GUI workspace | Portable/fake-backend tests; Windows backend and hardware remain to validate |
+| This paired MIDI candidate | MIDI 1.0 ports/routes, BPM, reclocking to the audio reference, separate GUI workspace | Windows compilation and isolated tests passed; real runtime/hardware unqualified |
 
 Native Windows audio is experimental; the shared transport and ASIO driver are
 owned by TimoxVasio, WASAPI remains inside TimoxVAudioEngine, and PWAR transport
