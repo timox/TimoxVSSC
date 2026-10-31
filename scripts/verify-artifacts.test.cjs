@@ -17,6 +17,8 @@ test('packaging refuses unpinned, missing and changed binaries and checks packag
     assert.throws(() => verify(root), /ENOENT/);
     fs.mkdirSync(path.join(root, 'artifacts/backend'), {recursive:true});
     for(const item of artifacts) fs.writeFileSync(path.join(root, item.path), 'fixture');
+    fs.writeFileSync(path.join(root, 'artifacts/backend/Windows.Devices.Midi2.dll'), 'runtime');
+    fs.writeFileSync(path.join(root, 'artifacts/backend/Windows.Devices.Midi2.pri'), 'runtime');
     verify(root);
     fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify({ version: '0.2.0-alpha.1' }));
     await assert.rejects(require('./before-pack.cjs')({packager:{info:{appDir:root}}}), /Release metadata/);
@@ -29,6 +31,8 @@ test('packaging refuses unpinned, missing and changed binaries and checks packag
     assert.throws(() => verify(root, true), /ENOENT/);
     fs.mkdirSync(path.join(root, 'dist/win-unpacked/resources/backend'), {recursive:true});
     for(const item of artifacts) fs.copyFileSync(path.join(root, item.path), path.join(root, 'dist/win-unpacked/resources/backend', path.basename(item.path)));
+    for(const name of ['Windows.Devices.Midi2.dll', 'Windows.Devices.Midi2.pri'])
+        fs.copyFileSync(path.join(root, 'artifacts/backend', name), path.join(root, 'dist/win-unpacked/resources/backend', name));
     fs.mkdirSync(path.join(root, 'dist/win-unpacked/resources/backend/schemas'), {recursive:true});
     for(const item of schemas) fs.copyFileSync(path.join(root, item.path), path.join(root, 'dist/win-unpacked/resources/backend', item.path.slice(4)));
     verify(root, true);

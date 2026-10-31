@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const required = ['artifacts/backend/TimoxVirtualAsioEngine.exe', 'artifacts/backend/PwarAsioClient.exe'];
+const requiredMidiRuntime = ['Windows.Devices.Midi2.dll', 'Windows.Devices.Midi2.pri'];
 const hash = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 function verify(root, packaged = false) {
     const lock = JSON.parse(fs.readFileSync(path.join(root, 'artifacts.lock.json'), 'utf8'));
@@ -16,6 +17,12 @@ function verify(root, packaged = false) {
         if (hash(file) !== item.sha256) throw new Error(`Artifact hash mismatch: ${name}`);
         if (packaged && hash(path.join(root, 'dist/win-unpacked/resources/backend', path.basename(name))) !== item.sha256)
             throw new Error(`Packaged artifact hash mismatch: ${name}`);
+    }
+    for (const name of requiredMidiRuntime) {
+        const source = path.join(root, 'artifacts/backend', name);
+        if (!fs.existsSync(source)) throw new Error(`Missing Windows MIDI Services runtime: ${name}`);
+        if (packaged && !fs.existsSync(path.join(root, 'dist/win-unpacked/resources/backend', name)))
+            throw new Error(`Missing packaged Windows MIDI Services runtime: ${name}`);
     }
     for (const name of ['api/openapi-v1.json', 'api/schemas/api-v1.json']) {
         const item = lock.schemas?.find(entry => entry.path === name);
