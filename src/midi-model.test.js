@@ -85,10 +85,12 @@ test('widgets are kept in local storage and invalid data is ignored', () => {
 });
 
 test('the timing reference names the sound card frequency and drift', () => {
-    expect(timebaseLabel({ reference: 'windows' })).toBe('Timing: Windows clock (no sound card running)');
-    expect(timebaseLabel({ reference: 'soundCard', nominalSampleRate: 48000, driftPpm: null })).toBe('Timing: sound card 48000 Hz, measuring…');
-    expect(timebaseLabel({ reference: 'soundCard', measuredSampleRate: 47999.04, driftPpm: -20 }))
-        .toBe('Timing: sound card 47999.04 Hz (−20.0 ppm vs Windows)');
+    expect(timebaseLabel({ reference: 'none' })).toBe('Timing: no master clock running (start audio)');
+    expect(timebaseLabel({ reference: 'asio', nominalSampleRate: 48000, driftPpm: null })).toBe('Timing: sound card 48000 Hz, measuring…');
+    expect(timebaseLabel({ reference: 'asio', measuredSampleRate: 47999.04, driftPpm: -20 }))
+        .toBe('Timing: sound card 47999.04 Hz (−20.0 ppm vs Windows counter)');
+    expect(timebaseLabel({ reference: 'software', measuredSampleRate: 48000, driftPpm: 0 }))
+        .toBe('Timing: software clock 48000.00 Hz (+0.0 ppm vs Windows counter)');
     const nodes = buildMidiNodes({ ports: [{ id: 'midi:clock:engine', kind: 'engineClock', source: true }] });
     expect(nodes[0]).toEqual(expect.objectContaining({ id: 'midi-engine-clock', kind: 'engineClock' }));
     expect(nodes[0].ports[0].side).toBe('source');

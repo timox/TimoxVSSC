@@ -283,10 +283,12 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
     const renderEngineClock = node => <div className={`midi-node engine-clock${engineClock?.running ? ' running' : ''}`}
         data-node-id={node.id} aria-label="Engine clock">
         <div className="midi-node-heading"><strong>Engine clock</strong>
-            <small>{timebase?.reference === 'soundCard' ? 'Counted in sound card samples' : 'Windows clock (no sound card)'}</small></div>
+            <small>{timebase?.reference === 'asio' ? 'Counted in sound card samples'
+                : timebase?.reference === 'software' ? 'Counted in software clock samples' : 'No master clock running'}</small></div>
         <div className="midi-engine-clock-body">
             <output className="midi-engine-clock-bpm">{(engineClock?.bpm ?? 120).toFixed(1)}</output> BPM
-            <span className="midi-engine-clock-state">{engineClock?.running ? 'Running' : 'Stopped'}</span>
+            <span className="midi-engine-clock-state">{engineClock?.waitingForMasterClock ? 'Waiting for the master clock'
+                : engineClock?.running ? 'Running' : 'Stopped'}</span>
         </div>
         <ul>{node.ports.map(renderPort)}</ul>
     </div>;
@@ -420,9 +422,10 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             {contextNode && <>
                 <strong>{contextNode.label}</strong>
                 {contextNode.kind === 'engineClock' && <>
-                    <button type="button" role="menuitem" disabled={busy || engineClock?.running}
+                    <button type="button" role="menuitem" disabled={busy || engineClock?.running || !timebase || timebase.reference === 'none'}
+                        title={timebase?.reference === 'none' ? 'Start audio first: the clock counts the master clock samples' : undefined}
                         onClick={() => menuAction(() => setClock({ transport: 'start' }))}>Start clock</button>
-                    <button type="button" role="menuitem" disabled={busy || engineClock?.running}
+                    <button type="button" role="menuitem" disabled={busy || engineClock?.running || !timebase || timebase.reference === 'none'}
                         onClick={() => menuAction(() => setClock({ transport: 'continue' }))}>Continue clock</button>
                     <button type="button" role="menuitem" disabled={busy || !engineClock?.running}
                         onClick={() => menuAction(() => setClock({ transport: 'stop' }))}>Stop clock</button>

@@ -30,18 +30,18 @@
       "source": "api/openapi-v1.json",
       "target": "api/openapi-v1.json",
       "sourceSha256": "243d01272e07b00cfd52819812ba3f96ec083d57207b4498b3490805081ef392",
-      "sha256": "eb7eced0ee716f8199667938768f4dbdb2a70027dffffdcb9ff1f8ccefd57c1d",
-      "targetSha256": "eb7eced0ee716f8199667938768f4dbdb2a70027dffffdcb9ff1f8ccefd57c1d",
-      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26; MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31",
+      "sha256": "3b260ce1f1577640ef15cf162fd3acac4f2d425fb6c3ed9069425898be56986f",
+      "targetSha256": "3b260ce1f1577640ef15cf162fd3acac4f2d425fb6c3ed9069425898be56986f",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26; MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31",
       "status": "modified"
     },
     {
       "source": "api/schemas/api-v1.json",
       "target": "api/schemas/api-v1.json",
       "sourceSha256": "113b1ea91f7635457cd40881cfe139e595cf6ab02e38533c99e03670e3140bf0",
-      "sha256": "3d54f0a2ba031ec2b125dd5df8c467c884ce4e07572071e64142b6720cc771c5",
-      "targetSha256": "3d54f0a2ba031ec2b125dd5df8c467c884ce4e07572071e64142b6720cc771c5",
-      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26; MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31",
+      "sha256": "81b71ed904502cfba99691a6cc93266e731f82a5cc6091b896e6b3ae9494b4c7",
+      "targetSha256": "81b71ed904502cfba99691a6cc93266e731f82a5cc6091b896e6b3ae9494b4c7",
+      "transformation": "Supervision API and GUI corrections after extraction, 2026-10-26; MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31",
       "status": "modified"
     },
     {
@@ -145,17 +145,17 @@
       "source": "gui/GUI_GUIDE.en.md",
       "target": "GUI_GUIDE.en.md",
       "sourceSha256": "0baf1a05da97e690e48b32248fbeee5cf2b365d59322c42ab555100c10b2fe8d",
-      "sha256": "34735f611d9e3eb5dc6a800e02e332f0900f06f07a79cb24a55801535973994a",
-      "targetSha256": "34735f611d9e3eb5dc6a800e02e332f0900f06f07a79cb24a55801535973994a",
-      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md; MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31"
+      "sha256": "accb673729a0de6ab1ca1dc29af755b8563024beff2fb995141b899e7762d5f7",
+      "targetSha256": "accb673729a0de6ab1ca1dc29af755b8563024beff2fb995141b899e7762d5f7",
+      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md; MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31"
     },
     {
       "source": "gui/GUI_GUIDE.md",
       "target": "GUI_GUIDE.md",
       "sourceSha256": "3642ab7548f3ba121aee8ed43a4a2b6dc0eddd15e85f6cf1fa001d0ad0e715ab",
-      "sha256": "93e4e33198ee3a19564a3dacecc1cf0bc787788a6f869c41c55dab49928f29c4",
-      "targetSha256": "93e4e33198ee3a19564a3dacecc1cf0bc787788a6f869c41c55dab49928f29c4",
-      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md; MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31"
+      "sha256": "0eec14b65a0a22a4d56edaca75c533b844d94bdade45ff8a5ef130524418cd6f",
+      "targetSha256": "0eec14b65a0a22a4d56edaca75c533b844d94bdade45ff8a5ef130524418cd6f",
+      "transformation": "adapted for standalone TimoxVSSC; see MIGRATION.md; MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31"
     },
     {
       "source": "gui/INTEGRATION.en.md",
@@ -804,37 +804,37 @@
       "source": null,
       "target": "src/MidiWorkspace.js",
       "sourceSha256": null,
-      "sha256": "35588f29a1979c49cad22581b563ad98d22cd539d1d51aa3619e9ba6a53f1f7a",
-      "targetSha256": "35588f29a1979c49cad22581b563ad98d22cd539d1d51aa3619e9ba6a53f1f7a",
+      "sha256": "a71b1423262ba03722ba9e3b0c9e097fd4b645076250d4f6aec4ea470876123a",
+      "targetSha256": "a71b1423262ba03722ba9e3b0c9e097fd4b645076250d4f6aec4ea470876123a",
       "status": "generated",
-      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31"
+      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31"
     },
     {
       "source": null,
       "target": "src/MidiWorkspace.test.js",
       "sourceSha256": null,
-      "sha256": "c519a6e12669c21c43bf926c6d09e9eb7fa5974a416218f6adb88e6ab311d7e1",
-      "targetSha256": "c519a6e12669c21c43bf926c6d09e9eb7fa5974a416218f6adb88e6ab311d7e1",
+      "sha256": "8cf650c4f15fc29b91b26dcdec4021f9e2ef7100496acd90db020b72625d30d0",
+      "targetSha256": "8cf650c4f15fc29b91b26dcdec4021f9e2ef7100496acd90db020b72625d30d0",
       "status": "generated",
-      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31"
+      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31"
     },
     {
       "source": null,
       "target": "src/midi-model.js",
       "sourceSha256": null,
-      "sha256": "c87613ec45681fb24168fa5ddf68ee3a5a4dca7ad3246bba317e8925282521b8",
-      "targetSha256": "c87613ec45681fb24168fa5ddf68ee3a5a4dca7ad3246bba317e8925282521b8",
+      "sha256": "2e9a8a80070561f6f10676a4661710632fd7353e316ca1f495e52e82f9446850",
+      "targetSha256": "2e9a8a80070561f6f10676a4661710632fd7353e316ca1f495e52e82f9446850",
       "status": "generated",
-      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31"
+      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31"
     },
     {
       "source": null,
       "target": "src/midi-model.test.js",
       "sourceSha256": null,
-      "sha256": "d20ec825657d2db7b4ad4a59593598309cf95be4cfd58bb247bcba9d4b793870",
-      "targetSha256": "d20ec825657d2db7b4ad4a59593598309cf95be4cfd58bb247bcba9d4b793870",
+      "sha256": "538935b18c2d824c53fdb2cae1bd4980c18cca1a3652766c31a59dbb51d8b6cb",
+      "targetSha256": "538935b18c2d824c53fdb2cae1bd4980c18cca1a3652766c31a59dbb51d8b6cb",
       "status": "generated",
-      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31"
+      "transformation": "MIDI tab and BPM display, 2026-10-31; MIDI clock locked to the sound card in the MIDI tab, 2026-10-31; MIDI clock follows the graph master clock, 2026-10-31"
     }
   ],
   "excluded": [

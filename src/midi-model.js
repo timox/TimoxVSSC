@@ -177,13 +177,15 @@ export function saveLayout(storage, layout) {
 
 // Default positions: devices that send on the left, applications in the
 // middle, devices that only receive on the right, widgets above.
-// Text for the time reference: the sound card's measured frequency and drift.
+// Text for the time reference: MIDI follows the graph's master clock (ASIO
+// card or software clock), never Windows timers.
 export function timebaseLabel(timebase) {
     if (!timebase) return '';
-    if (timebase.reference !== 'soundCard') return 'Timing: Windows clock (no sound card running)';
-    if (typeof timebase.driftPpm !== 'number') return `Timing: sound card ${timebase.nominalSampleRate} Hz, measuring…`;
+    if (timebase.reference === 'none' || !timebase.reference) return 'Timing: no master clock running (start audio)';
+    const master = timebase.reference === 'software' ? 'software clock' : 'sound card';
+    if (typeof timebase.driftPpm !== 'number') return `Timing: ${master} ${timebase.nominalSampleRate} Hz, measuring…`;
     const sign = timebase.driftPpm >= 0 ? '+' : '−';
-    return `Timing: sound card ${timebase.measuredSampleRate.toFixed(2)} Hz (${sign}${Math.abs(timebase.driftPpm).toFixed(1)} ppm vs Windows)`;
+    return `Timing: ${master} ${timebase.measuredSampleRate.toFixed(2)} Hz (${sign}${Math.abs(timebase.driftPpm).toFixed(1)} ppm vs Windows counter)`;
 }
 
 export function defaultPosition(node, index) {
