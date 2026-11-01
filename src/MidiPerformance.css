@@ -1,0 +1,11 @@
+.midi-performance { min-width: 0; }
+.midi-performance-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.midi-performance-heading h2 { margin: 0 0 6px; }
+.midi-reference-metrics { margin: 18px 0 14px; }
+.midi-reference-explanation { margin: 0 0 24px; }
+.midi-performance h3 { margin: 22px 0 10px; }
+.midi-clock-table-wrap { overflow-x: auto; }
+.midi-clock-table { width: 100%; border-collapse: collapse; }
+.midi-clock-table th, .midi-clock-table td { padding: 9px 10px; border-bottom: 1px solid var(--border-subtle); text-align: left; }
+.midi-clock-table thead th { color: var(--text-secondary); font-size: 12px; font-weight: 600; }
+.midi-clock-table .midi-bpm-reading { color: #a86400; font-weight: 700; font-variant-numeric: tabular-nums; }

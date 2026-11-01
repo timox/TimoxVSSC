@@ -18,6 +18,7 @@ import AudioFlowIcon from './AudioFlowIcon';
 import QuickRouting from './QuickRouting';
 import BufferTimingDiagram from './BufferTimingDiagram';
 import AnalysisTimeline from './AnalysisTimeline';
+import MidiPerformance from './MidiPerformance';
 import { readHardwareTransfer, saveHardwareTransfer, transferRoutesToDriver } from './hardware-transfer';
 import { DEFAULT_ROUTE_COLOR, readRouteVisuals, routeVisualKey, saveRouteVisuals } from './route-visuals';
 import { transferProcessConnections } from './process-connection-transfer';
@@ -1127,8 +1128,9 @@ function App() {
                 <section className="section topic-help" id="api-panel-help" role="tabpanel" aria-labelledby="api-tab-help" hidden={apiTab !== 'help'}><AudioHelpContent topic="api" /></section>
             </main> : activeView === 'performance' ? <main className="main-content api-console">
                 <div className="workspace-heading"><div><h2>Performance</h2><p>Live observations · {activeClockDriver}</p></div>
-                    <button className="workspace-help" type="button" onClick={() => setHelpTopic('performance-' + (performanceTab === 'help' ? 'callback' : performanceTab))}>? <span>Reading these measurements</span></button></div>
-                <SectionTabs id="performance" label="performance topics" value={performanceTab} onChange={setPerformanceTab} tabs={[{"id":"callback","label":"Audio callback"},{"id":"applications","label":"Applications"},{"id":"transport","label":"Transport"},{"id":"stages","label":"Stage measurements"},{"id":"help","label":"Help"}]} />
+                    <button className="workspace-help" type="button" onClick={() => setHelpTopic('performance-' + (performanceTab === 'help' || performanceTab === 'midi' ? 'callback' : performanceTab))}>? <span>Reading these measurements</span></button></div>
+                <SectionTabs id="performance" label="performance topics" value={performanceTab} onChange={setPerformanceTab} tabs={[{"id":"callback","label":"Audio callback"},{"id":"applications","label":"Applications"},{"id":"transport","label":"Transport"},{"id":"midi","label":"MIDI"},{"id":"stages","label":"Stage measurements"},{"id":"help","label":"Help"}]} />
+                <div hidden={performanceTab !== 'midi'}><MidiPerformance api={window.vasio} /></div>
                 <section className="section buffer-health" id="performance-panel-callback" role="tabpanel" aria-labelledby="performance-tab-callback" hidden={performanceTab !== 'callback'} aria-label={runningSoftwareClock ? 'Software callback performance' : 'Physical callback performance'}>
                     <h2>{runningSoftwareClock ? 'Software clock callback' : 'Physical ASIO callback'}</h2>
                     {!bufferHealth ? <p>No callback observation yet. Open an ASIO application and wait for a five-second window.</p> : <>

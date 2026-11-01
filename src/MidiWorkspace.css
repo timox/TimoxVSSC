@@ -55,8 +55,12 @@
 .midi-reference-clock.none .midi-reference-clock-badge { background: #34414a; color: #aebbc4; }
 .midi-node.engine-clock { border-color: #f0a92e; }
 .midi-node.engine-clock.running .midi-node-heading strong::after { content: ' ●'; color: #2fbf71; }
-.midi-engine-clock-body { display: flex; align-items: baseline; gap: 6px; padding: 6px 10px 0; color: #aebbc4; font-size: 12px; }
-.midi-engine-clock-bpm { color: #f4f6f8; font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.midi-engine-clock-tempo-label { color: #aebbc4; }
+.midi-engine-clock-body { display: flex; align-items: baseline; justify-content: flex-end; gap: 6px; padding: 6px 10px 0; color: #aebbc4; font-size: 12px; }
 .midi-engine-clock-state { margin-left: auto; }
+.midi-graph-badges { position: absolute; z-index: 4; top: 12px; left: 12px; display: flex; gap: 7px; pointer-events: none; }
+.midi-reference-badge, .midi-format-badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.midi-reference-badge.asio { background: #173e4a; color: #73d5e8; }
+.midi-reference-badge.software { background: #3b3158; color: #d7b8ff; }
+.midi-reference-badge.none { background: #34414a; color: #aebbc4; }
+.midi-format-badge { background: #27343d; color: #d7e0e6; }
 .react-flow__edge.midi-route-edge.reclock .react-flow__edge-path { stroke-width: 3.5; }

@@ -287,8 +287,6 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             <small>{referenceClock?.source === 'asio' ? 'Counted in sound card samples'
                 : referenceClock?.source === 'software' ? 'Counted in software clock samples' : 'Reference clock not running'}</small></div>
         <div className="midi-engine-clock-body">
-            <output className="midi-engine-clock-bpm">{(engineClock?.bpm ?? 120).toFixed(1)}</output>
-            <span className="midi-engine-clock-tempo-label">output tempo</span>
             <span className="midi-engine-clock-state">{engineClock?.waitingForReferenceClock ? 'Waiting for the reference clock'
                 : engineClock?.running ? 'Sending clock' : referenceClock?.source && referenceClock.source !== 'none'
                     ? 'Listening to reference clock' : 'Reference clock unavailable'}</span>
@@ -406,6 +404,10 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                     event.preventDefault(); setMenu({ kind: 'pane', x: 24, y: 24 });
                 }
             }}>
+            <div className="midi-graph-badges" aria-label="MIDI graph context">
+                <span className={`midi-reference-badge ${referenceClockSourceClass(referenceClock)}`}>{referenceClockSourceLabel(referenceClock)}</span>
+                <span className="midi-format-badge">MIDI 1.0 only</span>
+            </div>
             <MidiCanvas modelNodes={flowNodes} edges={flowEdges} isValidConnection={isValidConnection} onConnect={onConnect}
                 onSavePosition={(id, position) => setLayout(current => ({ ...current, [id]: { x: position.x, y: position.y } }))}
                 onPaneContextMenu={event => openMenu(event, 'pane')}
