@@ -76,6 +76,31 @@ own final hash).
 
 ## What comes after 1.2.7
 
+## Local overlay test without uninstalling 1.2.7
+
+The portable preview can be tested side-by-side with the installed 1.2.7
+driver. It does not install, unregister, or replace the driver. The explicit
+handoff launcher first asks the attached TimoxVasio client applications to
+close gracefully, sends `engine.stop`, verifies the stable engine has no
+clients and is stopped, ends only the exact stable engine PID, waits for the
+loopback API port to be released, and then launches the portable executable.
+
+Run from this repository in an elevated PowerShell only if the installed
+engine path requires it:
+
+```powershell
+.\scripts\portable-overlay-handoff.ps1 `
+  -StableEnginePath 'C:\Path\To\installed\TimoxVirtualAsioEngine.exe' `
+  -PortableExePath '.\dist\TimoxVSSC-0.2.0-alpha.1-preview.exe' `
+  -ConfirmHandoff
+```
+
+The launcher refuses to proceed without `-ConfirmHandoff`, refuses clients
+without a closable main window, and never uses a broad process-name kill. Use
+`-NoLaunch` to validate the handoff and leave the portable executable closed.
+After the test, close the portable application and relaunch the installed
+1.2.7 Control application; no uninstall or driver re-registration is needed.
+
 | Stage | Implemented scope | Qualification |
 |---|---|---|
 | Public combined 1.2.7 | ASIO driver, routing engine, Control GUI, API 1.0 | Historical published release |
