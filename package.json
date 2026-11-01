@@ -1,6 +1,6 @@
 {
   "name": "timox-vssc",
-  "version": "0.1.0",
+  "version": "0.2.0-alpha.1",
   "description": "TimoxVSSC control preview",
   "main": "electron/main.js",
   "homepage": "./",
@@ -17,7 +17,10 @@
     "release-postflight": "node scripts/verify-artifacts.cjs --packaged",
     "electron-build": "npm run react-build && npm run release-preflight && electron-builder && npm run release-postflight",
     "pack": "npm run release-preflight && electron-builder --dir && npm run release-postflight",
-    "dist": "npm run electron-build"
+    "dist": "npm run electron-build",
+    "release-metadata": "node scripts/release-metadata.cjs",
+    "pin-engine": "node scripts/pin-engine.cjs",
+    "pin-pwar": "node scripts/pin-pwar.cjs"
   },
   "dependencies": {
     "@xyflow/react": "^12.12.0",
@@ -81,6 +84,10 @@
       {
         "from": "legal",
         "to": "legal"
+      },
+      {
+        "from": "build/release-manifest.json",
+        "to": "release-manifest.json"
       }
     ],
     "directories": {

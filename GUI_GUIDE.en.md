@@ -30,6 +30,18 @@ The axes show only endpoints published by the API. To show physical ports, selec
 
 A configuration change interrupts the stream while the graph is rebuilt. Engine status and structured errors appear in the interface.
 
+## MIDI
+
+The **MIDI** section is separate from audio. It shows the engine's MIDI 1.0 patchbay: one block per application port and per MIDI 1.0 device. Each application has its own port: "<name> In" (the application sends to the patchbay, *from app*) and "<name> Out" (the patchbay sends to the application, *to app*). Each direction is turned on or off separately.
+
+- Drag a cable from an output to an input to create a MIDI connection. A cable's context menu opens its properties (channels, message types, output channel, transpose) in a dialog, or deletes it. A dashed cable is configured but inactive.
+- The background context menu adds an application port or a BPM display, or re-reads the port list.
+- A port's green light shows activity (notes, controllers…), never clock ticks. A port receiving clock shows its tempo (♩); struck through, it is probably the echo of clock sent by the patchbay.
+- **Reference clock**: the clock that paces the audio graph, either the ASIO card or the software clock without a card. All engine MIDI is placed on its samples, never on Windows timers. It is not a MIDI master/slave role. The tab header shows its source, measured real frequency and offset in ppm.
+- **Engine clock**: the "Engine clock" block generates MIDI clock by counting reference clock samples, so it never drifts from the audio. Its context menu starts, stops, continues it or sets its tempo in a dialog. Starting needs audio running; if the reference clock stops, the block shows "Waiting for the reference clock". Connect it with a cable like any source.
+- **Reclocking**: in a connection's properties, "Reclock on the reference clock" re-emits the received clock on a regular grid in reference clock samples: jitter disappears, the source tempo is kept. The cable is then thicker.
+- **BPM display**: a widget assigned to a port from its context menu or by dragging a cable from the port to the widget. It shows the tempo of the clock arriving on that port, its state and the last start/stop. The receiving port identifies the clock emitter. Widgets and block positions stay in the interface; they do not change the engine.
+
 ## Performance
 
 The “Performance” view reads `bufferHealth` from `GET /api/v1/state`: slowest physical callback, time available for one block, margin or overrun, delayed starts, processing overruns and observed callbacks over the last five-second window. The “Enable stage measurements” checkbox sends `performance.measurements.set`; collection, off at engine start, samples at most one callback in sixteen and publishes the mean, worst value and sample count of each stage (application call, ring write, ring wait, client read, routing, physical copy). Nothing is adjusted automatically. The [feature guide](../docs/FONCTIONS.en.md) explains how to read these values.

@@ -18,7 +18,8 @@ test('packaging refuses unpinned, missing and changed binaries and checks packag
     fs.mkdirSync(path.join(root, 'artifacts/backend'), {recursive:true});
     for(const item of artifacts) fs.writeFileSync(path.join(root, item.path), 'fixture');
     verify(root);
-    await require('./before-pack.cjs')({packager:{info:{appDir:root}}});
+    fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify({ version: '0.2.0-alpha.1' }));
+    await assert.rejects(require('./before-pack.cjs')({packager:{info:{appDir:root}}}), /Release metadata/);
     const saved = artifacts[0].sha256; artifacts[0].sha256 = null; writeLock();
     assert.throws(() => verify(root), /Unpinned/);
     artifacts[0].sha256 = saved; writeLock();

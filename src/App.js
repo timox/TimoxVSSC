@@ -7,6 +7,7 @@ import './RoutingPalette.css';
 import AudioHelpDialog, { AudioHelpContent } from './AudioHelpDialog';
 import ContextHelp from './ContextHelp';
 import SectionTabs from './SectionTabs';
+import MidiWorkspace from './MidiWorkspace';
 import RoutingPatchbay from './RoutingPatchbay';
 import NativeAudioDialog from './NativeAudioDialog';
 import PwarDialog from './PwarDialog';
@@ -1035,7 +1036,7 @@ function App() {
             </header>
             <nav className="view-tabs" aria-label="Application sections">
                 <div className="view-tabs-heading">Sections</div>
-                {[['configuration', 'Audio setup'], ['channels', 'Routing'], ['analysis', 'Analysis'], ['performance', 'Performance'], ['api', 'API and Swagger'], ['diagnostics', 'Logs']].map(([id, label]) =>
+                {[['configuration', 'Audio setup'], ['channels', 'Routing'], ['midi', 'MIDI'], ['analysis', 'Analysis'], ['performance', 'Performance'], ['api', 'API and Swagger'], ['diagnostics', 'Logs']].map(([id, label]) =>
                     <button key={id} type="button" className={activeView === id ? 'selected' : ''} aria-current={activeView === id ? 'page' : undefined}
                         onClick={() => { setRoutingDialog(null); setProfileCatalogOpen(false); setActiveView(id); if (id === 'diagnostics') refreshDiagnostics(); }}>{label}</button>)}
                 {activeView === 'channels' && <div className="view-tabs-actions">
@@ -1047,7 +1048,9 @@ function App() {
                         disabled={configurationLocked || !!hardwareTransfer}>Discard pending edits</button>}
                 </div>}
             </nav>
-            {activeView === 'analysis' ? <main className="main-content api-console">
+            {activeView === 'midi' ? <main className="main-content midi-content">
+                <MidiWorkspace />
+            </main> : activeView === 'analysis' ? <main className="main-content api-console">
                 <div className="workspace-heading"><h2>Analysis</h2><ContextHelp topic={analysisTab === 'help' ? 'analysis' : 'analysis-' + analysisTab} onOpen={setHelpTopic} label="Help with this analysis" /></div>
                 <SectionTabs id="analysis" label="analysis topics" value={analysisTab} onChange={setAnalysisTab} tabs={[{"id":"timeline","label":"Timeline"},{"id":"transport","label":"Transport incidents"},{"id":"channels","label":"Channels"},{"id":"correlation","label":"Stereo correlation"},{"id":"help","label":"Help"}]} />
                 <div className="subtopic-panel" hidden={['correlation', 'help'].includes(analysisTab)}>

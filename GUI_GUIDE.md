@@ -30,6 +30,18 @@ Les axes montrent uniquement les endpoints publiés par l’API. Pour faire appa
 
 Un changement de configuration interrompt le flux pendant la reconstruction du graphe. Le statut du moteur et les erreurs structurées sont affichés dans l’interface.
 
+## MIDI
+
+La section **MIDI** est séparée du son. Elle affiche le patch bay MIDI 1.0 du moteur : un bloc par port d'application et par appareil MIDI 1.0. Chaque application a son propre port : « <nom> In » (l'application envoie au patch bay, *from app*) et « <nom> Out » (le patch bay envoie à l'application, *to app*). Chaque sens s'active ou se désactive séparément.
+
+- Tirer un câble d'une sortie vers une entrée crée une connexion MIDI. Le menu contextuel d'un câble ouvre ses propriétés (canaux, types de messages, canal de sortie, transposition) dans une fenêtre, ou le supprime. Un câble en pointillés est configuré mais inactif.
+- Le menu contextuel du fond ajoute un port d'application ou un affichage BPM, ou relit la liste des ports.
+- Le voyant vert d'un port indique de l'activité (notes, contrôleurs…), jamais les ticks d'horloge. Un port qui reçoit une horloge affiche son tempo (♩) ; s'il est barré, c'est probablement l'écho de l'horloge envoyée par le patch bay.
+- **Horloge de référence** : l'horloge qui cadence le graphe audio, soit la carte ASIO, soit l'horloge logicielle sans carte. Tout le MIDI du moteur est placé sur ses échantillons, jamais sur les temporisateurs Windows. Ce n'est pas un rôle maître/esclave MIDI. L'en-tête de l'onglet indique sa source, sa fréquence réelle mesurée et son écart en ppm.
+- **Horloge du moteur** : le bloc « Engine clock » génère une horloge MIDI en comptant les échantillons de l'horloge de référence ; elle ne dérive donc jamais de l'audio. Son menu contextuel la démarre, l'arrête, la relance (continue) ou règle son tempo dans une fenêtre. Le démarrage demande un audio en marche ; si l'horloge de référence s'arrête, le bloc affiche « Waiting for the reference clock ». On la relie par un câble comme n'importe quelle source.
+- **Recalage** : dans les propriétés d'une connexion, « Reclock on the reference clock » réémet l'horloge reçue sur une grille régulière en échantillons de l'horloge de référence : la gigue disparaît, le tempo de la source est conservé. Le câble est alors plus épais.
+- **Affichage BPM** : un widget à affecter à un port, depuis son menu contextuel ou en tirant un câble du port vers le widget. Il affiche le tempo de l'horloge qui arrive sur ce port, son état et le dernier start/stop. Le port d'arrivée identifie l'émetteur de l'horloge. Les widgets et la position des blocs restent dans l'interface : ils ne modifient pas le moteur.
+
 ## Performance
 
 La vue « Performance » lit `bufferHealth` dans `GET /api/v1/state` : callback physique le plus lent, temps disponible pour un bloc, marge ou dépassement, démarrages retardés, dépassements de traitement et callbacks observés sur la dernière fenêtre de cinq secondes. La case « Enable stage measurements » envoie `performance.measurements.set` ; la collecte, désactivée au démarrage du moteur, échantillonne au plus un callback sur seize et publie la moyenne, le maximum et le nombre d’échantillons de chaque étape (appel de l’application, écriture dans l’anneau, attente, lecture des clients, routage, copie physique). Rien n’est ajusté automatiquement. Le [guide des fonctions](../docs/FONCTIONS.md) détaille la lecture de ces valeurs.
