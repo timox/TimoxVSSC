@@ -10,8 +10,11 @@ function checkSource(root, lock) {
         throw new Error('Release metadata must match the GUI candidate version/channel');
     if (lock.requiredApiVersion !== '1.1' || release.engine.apiVersion !== lock.requiredApiVersion)
         throw new Error('Release API version mismatch');
-    if (release.driver.version !== '1.2.7' || release.driver.bundled !== false)
-        throw new Error('The portable candidate requires the external 1.2.7 driver');
+    if (release.driver.version !== '1.2.7-test' || release.driver.bundled !== true)
+        throw new Error('The preview candidate requires the bundled 1.2.7-test driver');
+    const driver = lock.artifacts.find(entry => entry.path === 'artifacts/driver/TimoxVasio.dll');
+    if (!driver || driver.sha256 !== release.driver.sha256 || hash(path.join(root, driver.path)) !== driver.sha256)
+        throw new Error('Preview driver is missing or does not match its pinned SHA-256');
     for (const component of [release.driver, release.engine, release.pwar])
         if (!/^[a-f0-9]{40}$/.test(component.revision || '')) throw new Error('Missing exact component revision');
     if (release.engine.windowsMidiServices !== true)

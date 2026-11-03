@@ -12,6 +12,8 @@ test('release packaging rejects incompatible engine/PWAR versions, pins, receipt
     const lock = structuredClone(require('../artifacts.lock.json'));
     const backend = path.join(root, 'artifacts/backend');
     fs.mkdirSync(backend, { recursive: true });
+    fs.mkdirSync(path.join(root, 'artifacts/driver'), { recursive: true });
+    fs.copyFileSync(path.join(__dirname, '..', 'artifacts/driver/TimoxVasio.dll'), path.join(root, 'artifacts/driver/TimoxVasio.dll'));
     fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify({ version: lock.release.guiVersion }));
     for (const item of lock.schemas) {
         fs.mkdirSync(path.dirname(path.join(root, item.path)), { recursive: true });

@@ -186,6 +186,19 @@ test('an unavailable MIDI engine is reported without blocking the tab', async ()
     } finally { await view.unmount(); }
 });
 
+test('missing Windows MIDI Services explains the required framework and no fallback', async () => {
+    const api = fakeApi(document_({ virtualPorts: [], routes: [] }, {
+        available: false, backend: '', error: 'Windows MIDI Services backend unavailable', ports: []
+    }));
+    const view = await mount(api);
+    try {
+        expect(view.container.querySelector('.midi-status').textContent)
+            .toContain('Windows MIDI Services (Windows.Devices.Midi2) is not available');
+        expect(view.container.querySelector('.patchbay-flow-empty').textContent)
+            .toContain('no legacy MIDI fallback');
+    } finally { await view.unmount(); }
+});
+
 test('the engine clock follows the reference clock and is driven from its block menu', async () => {
     const configuration = { virtualPorts: [], routes: [
         { id: 'keys-to-synth', source: 'midi:port:1:usb', destination: 'midi:port:2:usb', enabled: true }] };

@@ -94,6 +94,30 @@ export function routeStatusById(midi) {
     return Object.fromEntries((midi?.routes || []).map(route => [route.id, route]));
 }
 
+export function formatRouteStatus(route, status = {}) {
+    const parts = [route?.enabled === false || status.active === false ? 'Disabled' : 'Active'];
+    const forwarded = Number(status.forwarded) || 0;
+    const filtered = Number(status.filtered) || 0;
+    parts.push(`${forwarded.toLocaleString('en-US')} message${forwarded === 1 ? '' : 's'}`);
+    if (filtered) parts.push(`${filtered.toLocaleString('en-US')} filtered`);
+    if (route?.channels?.length) {
+        const channels = [...route.channels].sort((a, b) => a - b);
+        parts.push(`channels ${channels.length === 1 ? channels[0] : `${channels[0]}–${channels[channels.length - 1]}`}`);
+    }
+    if (route?.reclock) parts.push('reclocking');
+    return parts.join(' · ');
+}
+
+export function formatEndpointSummary(port) {
+    const parts = ['Windows MIDI Services / Windows.Devices.Midi2'];
+    if (port?.transport) parts.push(port.transport);
+    if (port?.nativeDataFormat) parts.push(port.nativeDataFormat);
+    if (port?.supportsMultiClient === true) parts.push('multi-client');
+    if (Number.isInteger(port?.activeClients)) parts.push(`${port.activeClients} client${port.activeClients === 1 ? '' : 's'}`);
+    if (port?.manufacturer) parts.push(port.manufacturer);
+    return parts.join(' · ');
+}
+
 export const sourcePorts = midi => (midi?.ports || []).filter(port => port.source);
 
 // Port that should be offered first for a BPM display: a running clock source

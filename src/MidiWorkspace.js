@@ -5,7 +5,7 @@ import '@xyflow/react/dist/style.css';
 import './MidiWorkspace.css';
 import {
     ENGINE_CLOCK_PORT, MESSAGE_CATEGORIES, VIRTUAL_PREFIX, buildMidiNodes, referenceClockLabel, clockStateLabel, defaultPosition, emptyConfiguration,
-    formatBpm, isActive, loadLayout, loadWidgets, observationsByPort, portObservation, routeStatusById,
+    formatBpm, formatEndpointSummary, formatRouteStatus, isActive, loadLayout, loadWidgets, observationsByPort, portObservation, routeStatusById,
     saveLayout, saveWidgets, slugify, sourcePorts, suggestedClockPort, validPortName, widgetNodeId,
     withApplicationPort, withRoute, withUpdatedRoute, withoutApplicationPort, withoutRoute
 } from './midi-model';
@@ -296,7 +296,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
     const renderNode = node => node.kind === 'engineClock' ? renderEngineClock(node) : <div className={`midi-node ${node.kind}${node.offline ? ' offline' : ''}`}
         data-node-id={node.id} aria-label={`${node.kind === 'application' ? 'Application port' : 'MIDI device'} ${node.label}`}>
         <div className="midi-node-heading"><strong>{node.label}</strong>
-            <small>{node.kind === 'application' ? 'Application' : node.offline ? 'Device · offline' : 'MIDI 1.0 device'}</small></div>
+            <small>{node.kind === 'application' ? 'Application' : node.offline ? 'Device · offline' : formatEndpointSummary(node.ports[0]?.portRef)}</small></div>
         <ul>{node.ports.map(renderPort)}</ul>
     </div>;
 
@@ -335,6 +335,8 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             return { id: `route:${route.id}`, source: from.id, target: to.id,
                 sourceHandle: outHandle(route.source), targetHandle: inHandle(route.destination),
                 className: `midi-route-edge${active ? '' : ' inactive'}${route.reclock ? ' reclock' : ''}`, animated: flowing,
+                label: formatRouteStatus(route, statusById[route.id]), labelShowBg: true,
+                labelBgPadding: [6, 3], labelBgBorderRadius: 4,
                 ariaLabel: `${portLabel(route.source)} to ${route.destination}${route.reclock ? ', clock reclocked on the reference clock' : ''}${active ? '' : ', inactive'}` };
         }).filter(Boolean),
         ...widgets.filter(widget => portOwner.has(widget.portId)).map(widget => ({
@@ -381,12 +383,15 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
 
     const clockSources = Object.values(observations).filter(port => port.clock?.running);
     const unavailable = midi && !midi.available;
+    const unavailableMessage = unavailable
+        ? `Windows MIDI Services (Windows.Devices.Midi2) is not available on this machine. This version has no legacy MIDI fallback.${midi.error ? ` ${midi.error}` : ''}`
+        : '';
 
     return <section className="section midi-workspace" aria-label="MIDI patchbay">
         <div className="workspace-heading"><div><h2>MIDI</h2>
-            <p>MIDI 1.0 only. Each application gets its own In and Out ports; the engine observes all traffic.</p></div>
+            <p>MIDI 1.0 endpoints through Windows MIDI Services. Each application gets its own In and Out ports; the engine observes all traffic.</p></div>
             <div className="midi-status" role="status">
-                {busy ? 'Applying…' : unavailable ? `MIDI unavailable${midi.error ? `: ${midi.error}` : ''}` :
+                {busy ? 'Applying…' : unavailable ? `MIDI unavailable · ${unavailableMessage}` :
                     midi ? `${graphNodes.length} blocks · ${configuration.routes.length} connections` +
                         (clockSources.length ? ` · clock from ${clockSources.map(port => portLabel(port.portId)).join(', ')}` : '') : 'Loading…'}
                 {referenceClock && <div className="midi-reference-clock">{referenceClockLabel(referenceClock)}</div>}
@@ -406,8 +411,9 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                 onNodeContextMenu={(event, id) => openMenu(event, 'node', id)}
                 onEdgeContextMenu={(event, id) => openMenu(event, 'edge', id)} />
             {midi && !graphNodes.length && !widgets.length && <div className="patchbay-flow-empty" role="status">
-                <strong>No MIDI port yet</strong>
-                <span>Right-click the graph to add an application port or a BPM display.</span></div>}
+                {unavailable ? <><strong>MIDI is unavailable</strong><span>{unavailableMessage}</span></> :
+                    <><strong>No MIDI port yet</strong><span>Right-click the graph to add an application port or a BPM display.</span></>}
+            </div>}
         </div>
         {menu && createPortal(<div className="patchbay-context-menu" role="menu" aria-label="MIDI actions"
             style={{ left: Math.max(8, menu.x), top: Math.max(8, menu.y) }}

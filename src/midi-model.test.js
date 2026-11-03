@@ -1,6 +1,7 @@
 import {
     buildMidiNodes, referenceClockLabel, clockStateLabel, formatBpm, isActive, loadWidgets, observationsByPort, saveWidgets, slugify,
-    suggestedClockPort, validPortName, withApplicationPort, withRoute, withoutApplicationPort, WIDGET_STORAGE_KEY
+    suggestedClockPort, validPortName, withApplicationPort, withRoute, withoutApplicationPort, WIDGET_STORAGE_KEY,
+    formatRouteStatus, formatEndpointSummary
 } from './midi-model';
 
 const midi = {
@@ -20,6 +21,21 @@ const midi = {
     ],
     routes: [{ id: 'r1', active: true, forwarded: 3, filtered: 0 }]
 };
+
+test('formats route health and processing details for the graph', () => {
+    expect(formatRouteStatus({ enabled: true, channels: [1, 2], messages: ['notes'], reclock: true },
+        { active: true, forwarded: 1245, filtered: 12 })).toBe('Active · 1,245 messages · 12 filtered · channels 1–2 · reclocking');
+    expect(formatRouteStatus({ enabled: false }, { active: false, forwarded: 0, filtered: 0 })).toBe('Disabled · 0 messages');
+});
+
+test('formats Windows MIDI Services endpoint capabilities without guessing missing values', () => {
+    expect(formatEndpointSummary({ framework: 'windows-midi-services', transport: 'KS',
+        manufacturer: 'ALLEN&HEATH LTD.', nativeDataFormat: 'MIDI 1.0 Byte Format',
+        supportsMultiClient: true, activeClients: 5 })).toBe(
+        'Windows MIDI Services / Windows.Devices.Midi2 · KS · MIDI 1.0 Byte Format · multi-client · 5 clients · ALLEN&HEATH LTD.');
+    expect(formatEndpointSummary({ framework: 'windows-midi-services', transport: null,
+        supportsMultiClient: null, activeClients: null })).toBe('Windows MIDI Services / Windows.Devices.Midi2');
+});
 
 test('application ports show only enabled directions and devices group their MIDI 1.0 ports', () => {
     const nodes = buildMidiNodes(midi);

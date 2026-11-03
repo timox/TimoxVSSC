@@ -21,6 +21,7 @@ import AnalysisTimeline from './AnalysisTimeline';
 import { readHardwareTransfer, saveHardwareTransfer, transferRoutesToDriver } from './hardware-transfer';
 import { DEFAULT_ROUTE_COLOR, readRouteVisuals, routeVisualKey, saveRouteVisuals } from './route-visuals';
 import { transferProcessConnections } from './process-connection-transfer';
+import releaseInfo from './release-info';
 const { configurationFromState, deviceTopologyKey, mergeClientObservations } = require('./api-contract');
 const { mergeConfigurationDraft } = require('./configuration-merge');
 const openApiDocument = require('./openapi-spec.generated');
@@ -1036,7 +1037,7 @@ function App() {
             </header>
             <nav className="view-tabs" aria-label="Application sections">
                 <div className="view-tabs-heading">Sections</div>
-                {[['configuration', 'Audio setup'], ['channels', 'Routing'], ['midi', 'MIDI'], ['analysis', 'Analysis'], ['performance', 'Performance'], ['api', 'API and Swagger'], ['diagnostics', 'Logs']].map(([id, label]) =>
+                {[['configuration', 'Audio setup'], ['channels', 'Routing'], ['midi', 'MIDI'], ['analysis', 'Analysis'], ['performance', 'Performance'], ['api', 'API and Swagger'], ['diagnostics', 'Logs'], ['about', 'À propos']].map(([id, label]) =>
                     <button key={id} type="button" className={activeView === id ? 'selected' : ''} aria-current={activeView === id ? 'page' : undefined}
                         onClick={() => { setRoutingDialog(null); setProfileCatalogOpen(false); setActiveView(id); if (id === 'diagnostics') refreshDiagnostics(); }}>{label}</button>)}
                 {activeView === 'channels' && <div className="view-tabs-actions">
@@ -1048,7 +1049,20 @@ function App() {
                         disabled={configurationLocked || !!hardwareTransfer}>Discard pending edits</button>}
                 </div>}
             </nav>
-            {activeView === 'midi' ? <main className="main-content midi-content">
+            {activeView === 'about' ? <main className="main-content api-console about-content">
+                <div className="workspace-heading"><div><h2>À propos de {releaseInfo.product.name}</h2><p>Versions des composants de cette préversion.</p></div></div>
+                <section className="section about-panel" aria-labelledby="about-components-title">
+                    <div className="section-heading"><div><h3 id="about-components-title">Composants installés</h3><p className="hint">Ces versions correspondent à l’assemblage verrouillé de cette préversion.</p></div></div>
+                    <div className="about-component-list">
+                        {releaseInfo.components.map(component => <article className="about-component" key={component.id}>
+                            <div><h4>{component.label}</h4><p>{component.description}</p></div>
+                            <strong>{component.version}</strong>
+                            {component.revision && <code title={component.revision}>révision {component.revision.slice(0, 8)}</code>}
+                        </article>)}
+                    </div>
+                    <dl className="about-contracts"><div><dt>Version GUI</dt><dd>{releaseInfo.product.version}</dd></div><div><dt>API requise</dt><dd>{releaseInfo.apiVersion}</dd></div></dl>
+                </section>
+            </main> : activeView === 'midi' ? <main className="main-content midi-content">
                 <MidiWorkspace />
             </main> : activeView === 'analysis' ? <main className="main-content api-console">
                 <div className="workspace-heading"><h2>Analysis</h2><ContextHelp topic={analysisTab === 'help' ? 'analysis' : 'analysis-' + analysisTab} onOpen={setHelpTopic} label="Help with this analysis" /></div>

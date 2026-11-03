@@ -2,8 +2,11 @@
 
 This repository's next candidate is **TimoxVSSC 0.2.0-alpha.1**, not the old
 combined TimoxVasio 1.2.7 package. It requires engine **1.3.0-alpha.1**, API **1.1**,
-and a Windows MIDI Services enabled build for its MIDI workspace. The external
-ASIO driver remains **1.2.7** and is not installed or bundled by this portable app.
+and a Windows MIDI Services enabled build for its MIDI workspace. The preview
+bundles ASIO driver **1.2.7-test** in its NSIS installer. Its uninstaller removes
+the GUI-owned engine, PWAR client and ASIO clients loading that preview DLL,
+then removes the preview registration when it is still active, so the stable
+driver can be installed afterward.
 The bundled PWAR candidate is independently versioned **0.1.0-alpha.1**, with
 control protocol **v1**. Its audio continuity remains unqualified.
 

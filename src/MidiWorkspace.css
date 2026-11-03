@@ -34,7 +34,10 @@
 .midi-bpm-state { color: #8899a6; }
 
 .react-flow__edge.midi-route-edge .react-flow__edge-path { stroke: #6b5bd6; stroke-width: 2; }
+.react-flow__edge.midi-route-edge .react-flow__edge-text { fill: var(--text-primary); font-size: 11px; font-weight: 600; }
+.react-flow__edge.midi-route-edge .react-flow__edge-textbg { fill: #fff; fill-opacity: .94; stroke: var(--border-subtle); stroke-width: 1; }
 .react-flow__edge.midi-route-edge.inactive .react-flow__edge-path { stroke: #9aa7b1; stroke-dasharray: 6 4; }
+.react-flow__edge.midi-route-edge.inactive .react-flow__edge-text { fill: var(--text-secondary); }
 .react-flow__edge.midi-monitor-edge .react-flow__edge-path { stroke: #f0a92e; stroke-width: 1.5; stroke-dasharray: 2 4; }
 
 .midi-dialog { width: min(560px, 100%); }

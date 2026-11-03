@@ -86,6 +86,10 @@
         "to": "legal"
       },
       {
+        "from": "assets/stop-preview-processes.ps1",
+        "to": "installer/stop-preview-processes.ps1"
+      },
+      {
         "from": "build/release-manifest.json",
         "to": "release-manifest.json"
       }
@@ -95,9 +99,16 @@
     },
     "win": {
       "target": [
-        "portable"
+        "nsis"
       ],
       "artifactName": "TimoxVSSC-${version}-preview.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "runAfterFinish": false,
+      "include": "assets/installer.nsh"
     },
     "beforePack": "./scripts/before-pack.cjs"
   }
