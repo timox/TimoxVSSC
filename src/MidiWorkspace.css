@@ -33,7 +33,8 @@
 .midi-bpm-port { color: #cfd8df; }
 .midi-bpm-state { color: #8899a6; }
 
-.react-flow__edge.midi-route-edge .react-flow__edge-path { stroke: #6b5bd6; stroke-width: 2; }
+.react-flow__edge.midi-route-edge { --midi-route-color: #6b5bd6; }
+.react-flow__edge.midi-route-edge .react-flow__edge-path { stroke: var(--midi-route-color); stroke-width: 2; }
 .react-flow__edge.midi-route-edge .react-flow__edge-text { fill: var(--text-primary); font-size: 11px; font-weight: 600; }
 .react-flow__edge.midi-route-edge .react-flow__edge-textbg { fill: #fff; fill-opacity: .94; stroke: var(--border-subtle); stroke-width: 1; }
 .react-flow__edge.midi-route-edge.inactive .react-flow__edge-path { stroke: #9aa7b1; stroke-dasharray: 6 4; }
@@ -58,3 +59,19 @@
 .midi-engine-clock-bpm { color: var(--text-primary); font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .midi-engine-clock-state { margin-left: auto; }
 .react-flow__edge.midi-route-edge.reclock .react-flow__edge-path { stroke-width: 3.5; }
+.react-flow__edge.midi-route-edge.midi-channel-1 { --midi-route-color: #d9485f; }
+.react-flow__edge.midi-route-edge.midi-channel-2 { --midi-route-color: #e07a35; }
+.react-flow__edge.midi-route-edge.midi-channel-3 { --midi-route-color: #c99a2e; }
+.react-flow__edge.midi-route-edge.midi-channel-4 { --midi-route-color: #6cae3f; }
+.react-flow__edge.midi-route-edge.midi-channel-5 { --midi-route-color: #2f9e68; }
+.react-flow__edge.midi-route-edge.midi-channel-6 { --midi-route-color: #2a9d8f; }
+.react-flow__edge.midi-route-edge.midi-channel-7 { --midi-route-color: #2780a8; }
+.react-flow__edge.midi-route-edge.midi-channel-8 { --midi-route-color: #3969b1; }
+.react-flow__edge.midi-route-edge.midi-channel-9 { --midi-route-color: #6654b5; }
+.react-flow__edge.midi-route-edge.midi-channel-10 { --midi-route-color: #8a4f9e; }
+.react-flow__edge.midi-route-edge.midi-channel-11 { --midi-route-color: #b04a9b; }
+.react-flow__edge.midi-route-edge.midi-channel-12 { --midi-route-color: #c34f7c; }
+.react-flow__edge.midi-route-edge.midi-channel-13 { --midi-route-color: #9a6b4f; }
+.react-flow__edge.midi-route-edge.midi-channel-14 { --midi-route-color: #687078; }
+.react-flow__edge.midi-route-edge.midi-channel-15 { --midi-route-color: #454f59; }
+.react-flow__edge.midi-route-edge.midi-channel-16 { --midi-route-color: #202b35; }

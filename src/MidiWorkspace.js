@@ -5,7 +5,7 @@ import '@xyflow/react/dist/style.css';
 import './MidiWorkspace.css';
 import {
     ENGINE_CLOCK_PORT, MESSAGE_CATEGORIES, VIRTUAL_PREFIX, buildMidiNodes, referenceClockLabel, clockStateLabel, defaultPosition, emptyConfiguration,
-    formatBpm, formatEndpointSummary, formatRouteStatus, isActive, loadLayout, loadWidgets, observationsByPort, portObservation, routeStatusById,
+    formatBpm, formatEndpointSummary, formatRouteStatus, isActive, loadLayout, loadWidgets, observationsByPort, portObservation, routeChannelClass, routeStatusById,
     saveLayout, saveWidgets, slugify, sourcePorts, suggestedClockPort, validPortName, widgetNodeId,
     withApplicationPort, withRoute, withUpdatedRoute, withoutApplicationPort, withoutRoute
 } from './midi-model';
@@ -330,14 +330,16 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             const from = portOwner.get(route.source), to = portOwner.get(route.destination);
             if (!from || !to) return null;
             const active = !!statusById[route.id]?.active;
+            const routeStatus = statusById[route.id];
+            const channelClass = routeChannelClass(route, routeStatus);
             const flowing = active && isActive(portObservation(portById.get(route.source) || {}, observations)
                 .activity?.lastUnixMs, now);
             return { id: `route:${route.id}`, source: from.id, target: to.id,
                 sourceHandle: outHandle(route.source), targetHandle: inHandle(route.destination),
-                className: `midi-route-edge${active ? '' : ' inactive'}${route.reclock ? ' reclock' : ''}`, animated: flowing,
-                label: formatRouteStatus(route, statusById[route.id]), labelShowBg: true,
+                className: `midi-route-edge${active ? '' : ' inactive'}${route.reclock ? ' reclock' : ''}${channelClass ? ` ${channelClass}` : ''}`, animated: flowing,
+                label: formatRouteStatus(route, routeStatus), labelShowBg: true,
                 labelBgPadding: [6, 3], labelBgBorderRadius: 4,
-                ariaLabel: `${portLabel(route.source)} to ${route.destination}${route.reclock ? ', clock reclocked on the reference clock' : ''}${active ? '' : ', inactive'}` };
+                ariaLabel: `${portLabel(route.source)} to ${route.destination}${routeStatus?.dominantChannel ? `, dominant channel ${routeStatus.dominantChannel}` : ''}${route.reclock ? ', clock reclocked on the reference clock' : ''}${active ? '' : ', inactive'}` };
         }).filter(Boolean),
         ...widgets.filter(widget => portOwner.has(widget.portId)).map(widget => ({
             id: `widget:${widget.id}`, source: portOwner.get(widget.portId).id, target: widgetNodeId(widget.id),

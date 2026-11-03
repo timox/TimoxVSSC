@@ -1,7 +1,7 @@
 import {
     buildMidiNodes, referenceClockLabel, clockStateLabel, formatBpm, isActive, loadWidgets, observationsByPort, saveWidgets, slugify,
     suggestedClockPort, validPortName, withApplicationPort, withRoute, withoutApplicationPort, WIDGET_STORAGE_KEY,
-    formatRouteStatus, formatEndpointSummary
+    formatRouteStatus, formatEndpointSummary, routeChannelClass
 } from './midi-model';
 
 const midi = {
@@ -26,6 +26,11 @@ test('formats route health and processing details for the graph', () => {
     expect(formatRouteStatus({ enabled: true, channels: [1, 2], messages: ['notes'], reclock: true },
         { active: true, forwarded: 1245, filtered: 12 })).toBe('Active · 1,245 messages · 12 filtered · channels 1–2 · reclocking');
     expect(formatRouteStatus({ enabled: false }, { active: false, forwarded: 0, filtered: 0 })).toBe('Disabled · 0 messages');
+    expect(formatRouteStatus({ channels: [1, 2] }, { active: true, forwarded: 12, dominantChannel: 2 }))
+        .toContain('dominant channel 2');
+    expect(routeChannelClass({ channels: [4] }, { forwarded: 0 })).toBe('midi-channel-4');
+    expect(routeChannelClass({ channels: [1, 2] }, { dominantChannel: 2 })).toBe('midi-channel-2');
+    expect(routeChannelClass({ channels: [1, 2] }, { dominantChannel: 2, dominantChannelTie: true })).toBe('');
 });
 
 test('formats Windows MIDI Services endpoint capabilities without guessing missing values', () => {

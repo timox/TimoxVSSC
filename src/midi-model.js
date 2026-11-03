@@ -104,8 +104,17 @@ export function formatRouteStatus(route, status = {}) {
         const channels = [...route.channels].sort((a, b) => a - b);
         parts.push(`channels ${channels.length === 1 ? channels[0] : `${channels[0]}–${channels[channels.length - 1]}`}`);
     }
+    if (Number.isInteger(status.dominantChannel) && !status.dominantChannelTie)
+        parts.push(`dominant channel ${status.dominantChannel}`);
     if (route?.reclock) parts.push('reclocking');
     return parts.join(' · ');
+}
+
+export function routeChannelClass(route, status = {}) {
+    const channel = Number.isInteger(status.dominantChannel) && !status.dominantChannelTie
+        ? status.dominantChannel
+        : route?.channels?.length === 1 ? route.channels[0] : null;
+    return Number.isInteger(channel) && channel >= 1 && channel <= 16 ? `midi-channel-${channel}` : '';
 }
 
 export function formatEndpointSummary(port) {
