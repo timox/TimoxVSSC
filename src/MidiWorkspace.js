@@ -171,6 +171,64 @@ function TempoDialog({ bpm, onSave, onClose }) {
     </Modal>;
 }
 
+function ClockSourceDialog({ ports, source, onSave, onClose }) {
+    const [value, setValue] = useState(source || '');
+    const choices = ports.filter(port => port.kind === 'port' && port.source && port.online);
+    return <Modal label="MIDI clock source" onClose={onClose}>
+        <p className="hint">Use standard MIDI Clock (F8) from a device or application. The engine measures its tempo and regenerates the output on the audio reference clock.</p>
+        <label className="field">Source port
+            <select value={value} onChange={event => setValue(event.target.value)} autoFocus>
+                <option value="">Manual BPM</option>
+                {choices.map(port => <option key={port.id} value={port.id}>{port.name} · {port.endpointName || port.endpointId}</option>)}
+            </select>
+        </label>
+        {!choices.length && <p className="hint">No native MIDI source port is currently available.</p>}
+        <div className="dialog-actions">
+            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="button" className="primary" onClick={() => onSave(value)}>Save</button>
+        </div>
+    </Modal>;
+}
+
+function MidiLearnDialog({ api, engineClock, onChanged, onClose }) {
+    const [slot, setSlot] = useState('beat');
+    const [state, setState] = useState(engineClock || {});
+    const [busy, setBusy] = useState(false);
+    const signal = state.learnedSignals?.[slot];
+    useEffect(() => {
+        if (!state.learningSlot || !api?.getMidi) return undefined;
+        const timer = window.setInterval(async () => {
+            try { const next = await api.getMidi(); setState(next.engineClock || {}); } catch (_) { /* dialog stays open */ }
+        }, 250);
+        return () => window.clearInterval(timer);
+    }, [api, state.learningSlot]);
+    const request = async action => {
+        setBusy(true);
+        try {
+            const next = await api.learnMidiClock({ slot, action });
+            setState(next.engineClock || {});
+            onChanged(next);
+        } finally { setBusy(false); }
+    };
+    return <Modal label="MIDI Learn clock" onClose={onClose}>
+        <p className="hint">Learn one signal at a time. Beat, Start and Stop are required; Continue is optional.</p>
+        <label className="field">Signal to learn
+            <select value={slot} onChange={event => setSlot(event.target.value)} disabled={busy || !!state.learningSlot}>
+                <option value="beat">Beat</option><option value="start">Start</option>
+                <option value="stop">Stop</option><option value="continue">Continue (optional)</option>
+            </select>
+        </label>
+        <p className="midi-learn-state">{state.learningSlot ? `Waiting for ${state.learningSlot}…`
+            : signal ? `Captured on ${signal.port} · status 0x${Number(signal.status).toString(16).toUpperCase()}`
+                : 'No signal learned yet.'}</p>
+        <div className="dialog-actions">
+            <button type="button" onClick={() => request('cancel')} disabled={busy || !state.learningSlot}>Cancel learn</button>
+            <button type="button" onClick={() => request('begin')} disabled={busy || !!state.learningSlot}>Learn signal</button>
+            <button type="button" className="primary" onClick={() => request('commit')} disabled={busy || !signal || !state.learningSlot}>Keep signal</button>
+        </div>
+    </Modal>;
+}
+
 function WidgetDialog({ widget, choices, suggested, onSave, onClose }) {
     const [portId, setPortId] = useState(widget?.portId || suggested || '');
     return <Modal label={widget ? 'Assign BPM display' : 'New BPM display'} onClose={onClose}>
@@ -283,8 +341,9 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
     const renderEngineClock = node => <div className={`midi-node engine-clock${engineClock?.running ? ' running' : ''}`}
         data-node-id={node.id} aria-label="Engine clock">
         <div className="midi-node-heading"><strong>Engine clock</strong>
-            <small>{referenceClock?.source === 'asio' ? 'Counted in sound card samples'
-                : referenceClock?.source === 'software' ? 'Counted in software clock samples' : 'Reference clock not running'}</small></div>
+            <small>{engineClock?.mode === 'midi-clock' ? `External MIDI Clock${engineClock.locked ? ` · ${engineClock.bpm?.toFixed?.(1) || '…'} BPM` : ' · waiting for tempo'}`
+                : referenceClock?.source === 'asio' ? 'Counted in sound card samples'
+                    : referenceClock?.source === 'software' ? 'Counted in software clock samples' : 'Reference clock not running'}</small></div>
         <div className="midi-engine-clock-body">
             <output className="midi-engine-clock-bpm">{(engineClock?.bpm ?? 120).toFixed(1)}</output> BPM
             <span className="midi-engine-clock-state">{engineClock?.waitingForReferenceClock ? 'Waiting for the reference clock'
@@ -439,6 +498,10 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                         onClick={() => menuAction(() => setClock({ transport: 'stop' }))}>Stop clock</button>
                     <button type="button" role="menuitem" disabled={busy}
                         onClick={() => menuAction(() => setDialog({ kind: 'tempo' }))}>Set tempo…</button>
+                    <button type="button" role="menuitem" disabled={busy}
+                        onClick={() => menuAction(() => setDialog({ kind: 'clock-source' }))}>MIDI clock source…</button>
+                    <button type="button" role="menuitem" disabled={busy}
+                        onClick={() => menuAction(() => setDialog({ kind: 'midi-learn' }))}>MIDI Learn clock…</button>
                 </>}
                 {contextVirtual && <button type="button" role="menuitem" disabled={busy}
                     onClick={() => menuAction(() => setDialog({ kind: 'port', port: contextVirtual }))}>Edit application port…</button>}
@@ -476,6 +539,11 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             onSave={route => { setDialog(null); apply(withUpdatedRoute(configuration, route)); }} />}
         {dialog?.kind === 'tempo' && <TempoDialog bpm={engineClock?.bpm} onClose={() => setDialog(null)}
             onSave={bpm => { setDialog(null); setClock({ bpm }); }} />}
+        {dialog?.kind === 'clock-source' && <ClockSourceDialog ports={midi?.ports || []} source={engineClock?.source}
+            onClose={() => setDialog(null)}
+            onSave={source => { setDialog(null); setClock({ source }); }} />}
+        {dialog?.kind === 'midi-learn' && <MidiLearnDialog api={api} engineClock={engineClock}
+            onChanged={next => setMidi(next)} onClose={() => setDialog(null)} />}
         {dialog?.kind === 'widget' && <WidgetDialog widget={dialog.widget} choices={widgetChoices} suggested={dialog.suggested}
             onClose={() => setDialog(null)}
             onSave={portId => {

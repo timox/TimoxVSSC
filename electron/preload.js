@@ -24,6 +24,7 @@ contextBridge.exposeInMainWorld('vasio', {
     getMidi: () => ipcRenderer.invoke('api:get-midi'),
     replaceMidiConfiguration: configuration => ipcRenderer.invoke('api:replace-midi-configuration', configuration),
     setMidiClock: settings => ipcRenderer.invoke('api:set-midi-clock', settings),
+    learnMidiClock: settings => ipcRenderer.invoke('api:learn-midi-clock', settings),
     getDiagnostics: limit => ipcRenderer.invoke('api:get-diagnostics', limit),
     setDiagnosticLevel: level => ipcRenderer.invoke('api:set-diagnostic-level', level),
     httpRequest: (method, path, body) => ipcRenderer.invoke('api:http-request', method, path, body),

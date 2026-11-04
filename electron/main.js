@@ -157,6 +157,7 @@ ipcMain.handle('api:get-midi', async () => (await getApiClient()).getMidi());
 ipcMain.handle('api:replace-midi-configuration', async (_event, configuration) =>
     (await getApiClient()).replaceMidiConfiguration(configuration));
 ipcMain.handle('api:set-midi-clock', async (_event, settings) => (await getApiClient()).setMidiClock(settings));
+ipcMain.handle('api:learn-midi-clock', async (_event, settings) => (await getApiClient()).learnMidiClock(settings));
 ipcMain.handle('api:replace-application-profiles', async (_event, profiles) =>
     (await getApiClient()).replaceApplicationProfiles(profiles));
 ipcMain.handle('api:get-diagnostics', async (_event, limit) => (await getApiClient()).getDiagnostics(limit));
