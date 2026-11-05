@@ -163,7 +163,7 @@ export default function RoutingPatchbay({ sourceGroups = [], destinationGroups =
         return () => document.removeEventListener('keydown', closeOnEscape);
     }, [processDialogKey]);
     const [selectedSourceId, setSelectedSourceId] = useState(null);
-    const connectedOnly = true;
+    const connectedOnly = false;
     const [focusPairId, setFocusPairId] = useState('');
     const [matrixOpen, setMatrixOpen] = useState(false);
     const matrixCloseRef = useRef(null);
