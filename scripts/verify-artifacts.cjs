@@ -3,7 +3,9 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const required = [
     'artifacts/backend/TimoxVirtualAsioEngine.exe',
-    'artifacts/backend/PwarAsioClient.exe',
+    'artifacts/backend/PwarAsioClient.exe'
+];
+const optionalRuntime = [
     'artifacts/backend/Windows.Devices.Midi2.dll',
     'artifacts/backend/Windows.Devices.Midi2.pri'
 ];
@@ -14,7 +16,8 @@ function verify(root, packaged = false) {
         require('./release-metadata.cjs').checkEngine(root, lock);
         require('./release-metadata.cjs').checkPwar(root, lock);
     }
-    for (const name of required) {
+    for (const name of [...required, ...optionalRuntime.filter(name =>
+        lock.artifacts.some(entry => entry.path === name))]) {
         const item = lock.artifacts.find(entry => entry.path === name);
         if (!item?.revision || !/^[a-f0-9]{64}$/.test(item.sha256 || '')) throw new Error(`Unpinned artifact: ${name}`);
         const file = path.join(root, name);
