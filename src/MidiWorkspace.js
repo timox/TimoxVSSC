@@ -194,6 +194,7 @@ function MidiLearnDialog({ api, engineClock, onChanged, onClose }) {
     const [slot, setSlot] = useState('beat');
     const [state, setState] = useState(engineClock || {});
     const [busy, setBusy] = useState(false);
+    const [error, setError] = useState('');
     const signal = state.learnedSignals?.[slot];
     useEffect(() => {
         if (!state.learningSlot || !api?.getMidi) return undefined;
@@ -204,10 +205,13 @@ function MidiLearnDialog({ api, engineClock, onChanged, onClose }) {
     }, [api, state.learningSlot]);
     const request = async action => {
         setBusy(true);
+        setError('');
         try {
             const next = await api.learnMidiClock({ slot, action });
             setState(next.engineClock || {});
             onChanged(next);
+        } catch (requestError) {
+            setError(requestError?.message || 'MIDI Learn could not open this port.');
         } finally { setBusy(false); }
     };
     return <Modal label="MIDI Learn clock" onClose={onClose}>
@@ -221,6 +225,7 @@ function MidiLearnDialog({ api, engineClock, onChanged, onClose }) {
         <p className="midi-learn-state">{state.learningSlot ? `Waiting for ${state.learningSlot}…`
             : signal ? `Captured on ${signal.port} · status 0x${Number(signal.status).toString(16).toUpperCase()}`
                 : 'No signal learned yet.'}</p>
+        {error && <p className="midi-dialog-error" role="alert">{error}</p>}
         <div className="dialog-actions">
             <button type="button" onClick={() => request('cancel')} disabled={busy || !state.learningSlot}>Cancel learn</button>
             <button type="button" onClick={() => request('begin')} disabled={busy || !!state.learningSlot}>Learn signal</button>
