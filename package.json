@@ -72,7 +72,9 @@
           "TimoxVirtualAsioEngine.exe",
           "PwarAsioClient.exe",
           "engine-build.json",
-          "pwar-build.json"
+          "pwar-build.json",
+          "Windows.Devices.Midi2.dll",
+          "Windows.Devices.Midi2.pri"
         ]
       },
       {

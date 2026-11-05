@@ -1,7 +1,12 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const required = ['artifacts/backend/TimoxVirtualAsioEngine.exe', 'artifacts/backend/PwarAsioClient.exe'];
+const required = [
+    'artifacts/backend/TimoxVirtualAsioEngine.exe',
+    'artifacts/backend/PwarAsioClient.exe',
+    'artifacts/backend/Windows.Devices.Midi2.dll',
+    'artifacts/backend/Windows.Devices.Midi2.pri'
+];
 const hash = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 function verify(root, packaged = false) {
     const lock = JSON.parse(fs.readFileSync(path.join(root, 'artifacts.lock.json'), 'utf8'));

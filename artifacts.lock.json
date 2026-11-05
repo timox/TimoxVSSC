@@ -25,6 +25,20 @@
       "sha256": "c0b9287c5c19efc9906fe80b748959a36cf93b1c47cd9b87f49a338062476b6d",
       "sourcePath": "build/Release/PwarAsioClient.exe",
       "sizeBytes": 152576
+    },
+    {
+      "path": "artifacts/backend/Windows.Devices.Midi2.dll",
+      "repository": "microsoft/Windows MIDI Services",
+      "revision": "1.0.16.0",
+      "sha256": "7a0d7dc0abd54b5ebfa0e1c713be92ca124857543359d5707ccbdefc3c2e940f",
+      "sizeBytes": 7079752
+    },
+    {
+      "path": "artifacts/backend/Windows.Devices.Midi2.pri",
+      "repository": "microsoft/Windows MIDI Services",
+      "revision": "1.0.16.0",
+      "sha256": "d04a030d84c77c6be8c0f2018a6d70fcd142ab5c940644b74223523f975da9fa",
+      "sizeBytes": 712
     }
   ],
   "schemas": [
