@@ -190,8 +190,10 @@ function ClockSourceDialog({ ports, source, onSave, onClose }) {
     </Modal>;
 }
 
-function MidiLearnDialog({ api, engineClock, onChanged, onClose }) {
+function MidiLearnDialog({ api, engineClock, ports, onChanged, onClose }) {
     const [slot, setSlot] = useState('beat');
+    const sourcePorts = ports.filter(port => port.kind === 'port' && port.source && port.online);
+    const [port, setPort] = useState(sourcePorts[0]?.id || '');
     const [state, setState] = useState(engineClock || {});
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState('');
@@ -207,7 +209,7 @@ function MidiLearnDialog({ api, engineClock, onChanged, onClose }) {
         setBusy(true);
         setError('');
         try {
-            const next = await api.learnMidiClock({ slot, action });
+            const next = await api.learnMidiClock({ slot, action, ...(action === 'begin' ? { port } : {}) });
             setState(next.engineClock || {});
             onChanged(next);
         } catch (requestError) {
@@ -222,13 +224,19 @@ function MidiLearnDialog({ api, engineClock, onChanged, onClose }) {
                 <option value="stop">Stop</option><option value="continue">Continue (optional)</option>
             </select>
         </label>
+        <label className="field">Source port
+            <select value={port} onChange={event => setPort(event.target.value)} disabled={busy || !!state.learningSlot}>
+                <option value="">Select a MIDI source</option>
+                {sourcePorts.map(item => <option key={item.id} value={item.id}>{item.name} · {item.endpointName || item.endpointId}</option>)}
+            </select>
+        </label>
         <p className="midi-learn-state">{state.learningSlot ? `Waiting for ${state.learningSlot}…`
             : signal ? `Captured on ${signal.port} · status 0x${Number(signal.status).toString(16).toUpperCase()}`
                 : 'No signal learned yet.'}</p>
         {error && <p className="midi-dialog-error" role="alert">{error}</p>}
         <div className="dialog-actions">
             <button type="button" onClick={() => request('cancel')} disabled={busy || !state.learningSlot}>Cancel learn</button>
-            <button type="button" onClick={() => request('begin')} disabled={busy || !!state.learningSlot}>Learn signal</button>
+            <button type="button" onClick={() => request('begin')} disabled={busy || !!state.learningSlot || !port}>Learn signal</button>
             <button type="button" className="primary" onClick={() => request('commit')} disabled={busy || !signal || !state.learningSlot}>Keep signal</button>
         </div>
     </Modal>;
@@ -547,7 +555,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
         {dialog?.kind === 'clock-source' && <ClockSourceDialog ports={midi?.ports || []} source={engineClock?.source}
             onClose={() => setDialog(null)}
             onSave={source => { setDialog(null); setClock({ source }); }} />}
-        {dialog?.kind === 'midi-learn' && <MidiLearnDialog api={api} engineClock={engineClock}
+        {dialog?.kind === 'midi-learn' && <MidiLearnDialog api={api} engineClock={engineClock} ports={midi?.ports || []}
             onChanged={next => setMidi(next)} onClose={() => setDialog(null)} />}
         {dialog?.kind === 'widget' && <WidgetDialog widget={dialog.widget} choices={widgetChoices} suggested={dialog.suggested}
             onClose={() => setDialog(null)}
