@@ -192,7 +192,7 @@ function ClockSourceDialog({ ports, source, onSave, onClose }) {
 
 function MidiLearnDialog({ api, engineClock, ports, onChanged, onClose }) {
     const [slot, setSlot] = useState('beat');
-    const sourcePorts = ports.filter(port => port.kind === 'port' && port.source && port.online);
+    const sourcePorts = ports.filter(port => (port.kind === 'port' || port.kind === 'virtual') && port.source && port.online);
     const [port, setPort] = useState(sourcePorts[0]?.id || '');
     const [state, setState] = useState(engineClock || {});
     const [busy, setBusy] = useState(false);
