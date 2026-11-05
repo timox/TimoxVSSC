@@ -67,7 +67,13 @@
     "extraResources": [
       {
         "from": "artifacts/backend",
-        "to": "backend"
+        "to": "backend",
+        "filter": [
+          "TimoxVirtualAsioEngine.exe",
+          "PwarAsioClient.exe",
+          "engine-build.json",
+          "pwar-build.json"
+        ]
       },
       {
         "from": "api/openapi-v1.json",
