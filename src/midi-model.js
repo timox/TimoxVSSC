@@ -53,7 +53,7 @@ export function clockStateLabel(clock) {
     return typeof clock.bpm === 'number' ? 'Clock running' : 'Measuring tempo';
 }
 
-// One node per application port and per MIDI 1.0 device endpoint.
+// One node per Timox MIDI loopback and per MIDI 1.0 device endpoint.
 export function buildMidiNodes(midi) {
     const nodes = [];
     const devices = new Map();
@@ -123,6 +123,8 @@ export function formatEndpointSummary(port) {
     if (port?.nativeDataFormat) parts.push(port.nativeDataFormat);
     if (port?.supportsMultiClient === true) parts.push('multi-client');
     if (Number.isInteger(port?.activeClients)) parts.push(`${port.activeClients} client${port.activeClients === 1 ? '' : 's'}`);
+    const clients = (port?.clients || []).map(client => client.processName || client.sessionName).filter(Boolean);
+    if (clients.length) parts.push(`clients: ${clients.join(', ')}`);
     if (port?.manufacturer) parts.push(port.manufacturer);
     return parts.join(' · ');
 }

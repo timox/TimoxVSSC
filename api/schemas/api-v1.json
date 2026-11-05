@@ -724,6 +724,20 @@
           "minimum": 0,
           "description": "Number of active endpoint clients when session enumeration is available; null means not enumerated."
         },
+        "clients": {
+          "type": "array",
+          "description": "Windows MIDI Services sessions currently connected to this endpoint, including the owning process when reported.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["processId", "processName", "sessionName"],
+            "properties": {
+              "processId": { "type": "integer", "minimum": 0 },
+              "processName": { "type": "string" },
+              "sessionName": { "type": "string" }
+            }
+          }
+        },
         "group": {
           "type": "integer",
           "minimum": 1,

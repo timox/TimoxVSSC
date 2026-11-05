@@ -36,13 +36,14 @@ test('formats route health and processing details for the graph', () => {
 test('formats Windows MIDI Services endpoint capabilities without guessing missing values', () => {
     expect(formatEndpointSummary({ framework: 'windows-midi-services', transport: 'KS',
         manufacturer: 'ALLEN&HEATH LTD.', nativeDataFormat: 'MIDI 1.0 Byte Format',
-        supportsMultiClient: true, activeClients: 5 })).toBe(
-        'Windows MIDI Services / Windows.Devices.Midi2 · KS · MIDI 1.0 Byte Format · multi-client · 5 clients · ALLEN&HEATH LTD.');
+        supportsMultiClient: true, activeClients: 5,
+        clients: [{ processName: 'mixxx.exe', sessionName: 'Client WinMM' }] })).toBe(
+        'Windows MIDI Services / Windows.Devices.Midi2 · KS · MIDI 1.0 Byte Format · multi-client · 5 clients · clients: mixxx.exe · ALLEN&HEATH LTD.');
     expect(formatEndpointSummary({ framework: 'windows-midi-services', transport: null,
         supportsMultiClient: null, activeClients: null })).toBe('Windows MIDI Services / Windows.Devices.Midi2');
 });
 
-test('application ports show only enabled directions and devices group their MIDI 1.0 ports', () => {
+test('MIDI loopbacks show only enabled directions and devices group their MIDI 1.0 ports', () => {
     const nodes = buildMidiNodes(midi);
     const app = nodes.find(node => node.id === 'midi-application:bitwig');
     expect(app.ports.map(port => [port.name, port.side])).toEqual([['Bitwig In', 'source']]);

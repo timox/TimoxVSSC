@@ -79,9 +79,9 @@ function ApplicationPortDialog({ port, takenIds, onSave, onClose }) {
     const [output, setOutput] = useState(port ? port.output !== false : true);
     const nameValid = validPortName(name);
     const valid = nameValid && (input || output);
-    return <Modal label={port ? `Application port ${port.name}` : 'New application port'} onClose={onClose}>
-        <p className="hint">One port per application. Each direction is a separate MIDI 1.0 loopback
-            the application selects in its own MIDI settings.</p>
+    return <Modal label={port ? `MIDI loopback ${port.name}` : 'New MIDI loopback'} onClose={onClose}>
+        <p className="hint">Each direction is a separate Windows MIDI Services Basic MIDI 1.0 loopback
+            that an application can select in its own MIDI settings.</p>
         <label className="field">Name shown to applications
             <input value={name} maxLength={24} onChange={event => setName(event.target.value)} autoFocus /></label>
         {!nameValid && name && <p className="midi-dialog-error">Use 1 to 24 plain characters (no accents), without leading or trailing spaces.</p>}
@@ -252,7 +252,7 @@ function WidgetDialog({ widget, choices, suggested, onSave, onClose }) {
                 <option value="">Not assigned</option>
                 {choices.map(choice => <option key={choice.id} value={choice.id}>{choice.label}</option>)}
             </select></label>
-        {!choices.length && <p className="hint">No port can send MIDI yet. Add an application port with its In enabled, or connect a MIDI 1.0 device.</p>}
+        {!choices.length && <p className="hint">No port can send MIDI yet. Add a MIDI loopback with its In enabled, or connect a MIDI 1.0 device.</p>}
         <div className="dialog-actions">
             <button type="button" onClick={onClose}>Cancel</button>
             <button type="button" className="primary" onClick={() => onSave(portId)}>Save</button>
@@ -366,7 +366,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
     </div>;
 
     const renderNode = node => node.kind === 'engineClock' ? renderEngineClock(node) : <div className={`midi-node ${node.kind}${node.offline ? ' offline' : ''}`}
-        data-node-id={node.id} aria-label={`${node.kind === 'application' ? 'Application port' : 'MIDI device'} ${node.label}`}>
+        data-node-id={node.id} aria-label={`${node.kind === 'application' ? 'MIDI loopback' : 'MIDI device'} ${node.label}`}>
         <div className="midi-node-heading"><strong>{node.label}</strong>
             <small>{node.kind === 'application' ? 'Application' : node.offline ? 'Device · offline' : formatEndpointSummary(node.ports[0]?.portRef)}</small></div>
         <ul>{node.ports.map(renderPort)}</ul>
@@ -486,7 +486,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                 onEdgeContextMenu={(event, id) => openMenu(event, 'edge', id)} />
             {midi && !graphNodes.length && !widgets.length && <div className="patchbay-flow-empty" role="status">
                 {unavailable ? <><strong>MIDI is unavailable</strong><span>{unavailableMessage}</span></> :
-                    <><strong>No MIDI port yet</strong><span>Right-click the graph to add an application port or a BPM display.</span></>}
+                    <><strong>No MIDI port yet</strong><span>Right-click the graph to add a MIDI loopback or a BPM display.</span></>}
             </div>}
         </div>
         {menu && createPortal(<div className="patchbay-context-menu" role="menu" aria-label="MIDI actions"
@@ -495,7 +495,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
             onKeyDown={event => { if (event.key === 'Escape') setMenu(null); }}>
             {menu.kind === 'pane' && <>
                 <button type="button" role="menuitem" disabled={busy || unavailable}
-                    onClick={() => menuAction(() => setDialog({ kind: 'port', port: null }))}>Add application port…</button>
+                    onClick={() => menuAction(() => setDialog({ kind: 'port', port: null }))}>Add MIDI loopback…</button>
                 <button type="button" role="menuitem" onClick={() => menuAction(() => addWidget())}>Add BPM display…</button>
                 <button type="button" role="menuitem" onClick={() => menuAction(refresh)}>Refresh MIDI ports</button>
             </>}
@@ -517,11 +517,11 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                         onClick={() => menuAction(() => setDialog({ kind: 'midi-learn' }))}>MIDI Learn clock…</button>
                 </>}
                 {contextVirtual && <button type="button" role="menuitem" disabled={busy}
-                    onClick={() => menuAction(() => setDialog({ kind: 'port', port: contextVirtual }))}>Edit application port…</button>}
+                    onClick={() => menuAction(() => setDialog({ kind: 'port', port: contextVirtual }))}>Edit MIDI loopback…</button>}
                 {firstSource(contextNode) && <button type="button" role="menuitem"
                     onClick={() => menuAction(() => addWidget(firstSource(contextNode)))}>Add BPM display for this block…</button>}
                 {contextVirtual && <button type="button" role="menuitem" disabled={busy}
-                    onClick={() => menuAction(() => apply(withoutApplicationPort(configuration, contextVirtual.id)))}>Remove application port</button>}
+                    onClick={() => menuAction(() => apply(withoutApplicationPort(configuration, contextVirtual.id)))}>Remove MIDI loopback</button>}
             </>}
             {contextWidget && <>
                 <strong>BPM display</strong>

@@ -88,12 +88,12 @@ function fakeApi(initial) {
 
 afterEach(() => { document.body.innerHTML = ''; });
 
-test('the MIDI tab adds an application port from the graph context menu', async () => {
+test('the MIDI tab adds a MIDI loopback from the graph context menu', async () => {
     const api = fakeApi(document_({ virtualPorts: [], routes: [] }));
     const view = await mount(api);
     try {
         expect(view.container.querySelector('[data-flow-node="midi-device:usb"]').textContent).toContain('UM-ONE In');
-        await choose(view.container.querySelector('[data-testid="flow"]'), 'Add application port…');
+        await choose(view.container.querySelector('[data-testid="flow"]'), 'Add MIDI loopback…');
         const name = document.querySelector('[role="dialog"] input:not([type])');
         await act(async () => Simulate.change(name, { target: { value: 'Bitwig' } }));
         const out = [...document.querySelectorAll('[role="dialog"] input[type="checkbox"]')][1];
