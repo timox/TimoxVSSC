@@ -13,8 +13,8 @@
     {
       "path": "artifacts/backend/TimoxVirtualAsioEngine.exe",
       "repository": "TimoxVAudioEngine",
-      "revision": "cb23868ce2170ace8dcdbe912155ef6318703d5b",
-      "sha256": "8506f5dc41eebb294c480fd38f1df3f7c0d55d84caa9ddec45e07aaea3fe7bdc",
+      "revision": "4cadd8b6cea8841345da2ce184a67b749136722f",
+      "sha256": "8c4d80409bbb9c79e03aa4ce0ed218bb3d0ff2df59d4778ce6eb5632ae1d61fe",
       "sourcePath": "build/Release/TimoxVirtualAsioEngine.exe",
       "sizeBytes": 1817088
     },
@@ -51,7 +51,7 @@
     "engine": {
       "repository": "timox/TimoxVAudioEngine",
       "version": "1.3.0-alpha.1",
-      "revision": "cb23868ce2170ace8dcdbe912155ef6318703d5b",
+      "revision": "4cadd8b6cea8841345da2ce184a67b749136722f",
       "apiVersion": "1.1",
       "windowsMidiServices": true,
       "buildRun": "https://github.com/timox/TimoxVAudioEngine/actions/runs/41240930939"
