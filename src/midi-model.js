@@ -129,6 +129,8 @@ export function formatEndpointSummary(port) {
     return parts.join(' · ');
 }
 
+export const formatMidiWords = words => (words || []).map(word => Number(word).toString(16).toUpperCase().padStart(8, '0')).join(' ');
+
 export const sourcePorts = midi => (midi?.ports || []).filter(port => port.source);
 
 // Port that should be offered first for a BPM display: a running clock source

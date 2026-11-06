@@ -1,7 +1,7 @@
 import {
     buildMidiNodes, referenceClockLabel, clockStateLabel, formatBpm, isActive, loadWidgets, observationsByPort, saveWidgets, slugify,
     suggestedClockPort, validPortName, withApplicationPort, withRoute, withoutApplicationPort, WIDGET_STORAGE_KEY,
-    formatRouteStatus, formatEndpointSummary, routeChannelClass
+    formatRouteStatus, formatEndpointSummary, routeChannelClass, formatMidiWords
 } from './midi-model';
 
 const midi = {
@@ -41,6 +41,10 @@ test('formats Windows MIDI Services endpoint capabilities without guessing missi
         'Windows MIDI Services / Windows.Devices.Midi2 · KS · MIDI 1.0 Byte Format · multi-client · 5 clients · clients: mixxx.exe · ALLEN&HEATH LTD.');
     expect(formatEndpointSummary({ framework: 'windows-midi-services', transport: null,
         supportsMultiClient: null, activeClients: null })).toBe('Windows MIDI Services / Windows.Devices.Midi2');
+});
+
+test('formats monitored MIDI UMP words as stable uppercase hexadecimal', () => {
+    expect(formatMidiWords([0x20903C64, 0x10F8])).toBe('20903C64 000010F8');
 });
 
 test('MIDI loopbacks show only enabled directions and devices group their MIDI 1.0 ports', () => {

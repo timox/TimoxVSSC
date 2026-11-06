@@ -5,7 +5,7 @@ import '@xyflow/react/dist/style.css';
 import './MidiWorkspace.css';
 import {
     ENGINE_CLOCK_PORT, MESSAGE_CATEGORIES, VIRTUAL_PREFIX, buildMidiNodes, referenceClockLabel, clockStateLabel, defaultPosition, emptyConfiguration,
-    formatBpm, formatEndpointSummary, formatRouteStatus, isActive, loadLayout, loadWidgets, observationsByPort, portObservation, routeChannelClass, routeStatusById,
+    formatBpm, formatEndpointSummary, formatMidiWords, formatRouteStatus, isActive, loadLayout, loadWidgets, observationsByPort, portObservation, routeChannelClass, routeStatusById,
     saveLayout, saveWidgets, slugify, sourcePorts, suggestedClockPort, validPortName, widgetNodeId,
     withApplicationPort, withRoute, withUpdatedRoute, withoutApplicationPort, withoutRoute
 } from './midi-model';
@@ -260,6 +260,38 @@ function WidgetDialog({ widget, choices, suggested, onSave, onClose }) {
     </Modal>;
 }
 
+function MidiMonitorDialog({ api, port, baselineSequence, onClose }) {
+    const [current, setCurrent] = useState(port);
+    const [error, setError] = useState('');
+    useEffect(() => {
+        let cancelled = false;
+        const refresh = async () => {
+            try {
+                const snapshot = await api.getMidi();
+                if (!cancelled) {
+                    setCurrent(snapshot.ports?.find(item => item.id === port.id) || { ...port, recentMessages: [] });
+                    setError('');
+                }
+            } catch (failure) { if (!cancelled) setError(failure.message || 'MIDI monitor unavailable'); }
+        };
+        refresh();
+        const timer = window.setInterval(refresh, 250);
+        return () => { cancelled = true; window.clearInterval(timer); };
+    }, [api, port]);
+    const messages = (current.recentMessages || []).filter(message => message.sequence > baselineSequence).slice().reverse();
+    return <Modal label={`MIDI monitor · ${port.name}`} onClose={onClose}>
+        <p className="hint">Messages received on this loopback after opening the monitor. The engine keeps a bounded buffer of the latest 64 UMP packets.</p>
+        {error && <p className="midi-dialog-error" role="alert">{error}</p>}
+        <div className="midi-monitor" aria-live="polite">
+            {!messages.length && <p className="hint">Waiting for MIDI…</p>}
+            {messages.map(message => <div className="midi-monitor-message" key={message.sequence}>
+                <time>{new Date(message.unixMs).toLocaleTimeString()}</time>
+                <code>{formatMidiWords(message.words)}</code>
+            </div>)}
+        </div>
+    </Modal>;
+}
+
 export default function MidiWorkspace({ api = typeof window !== 'undefined' ? window.vasio : undefined,
     storage = typeof window !== 'undefined' ? window.localStorage : undefined, now: fixedNow }) {
     const [midi, setMidi] = useState(null);
@@ -453,6 +485,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
         ? widgets.find(widget => `widget:${widget.id}` === menu.id) : null;
     const contextVirtual = contextNode?.kind === 'application'
         ? configuration.virtualPorts.find(port => port.id === contextNode.resourceId) : null;
+    const contextPort = contextVirtual ? portById.get(`midi:virtual:${contextVirtual.id}`) : null;
     const firstSource = node => node?.ports.find(port => port.side === 'source')?.id;
 
     const clockSources = Object.values(observations).filter(port => port.clock?.running);
@@ -518,6 +551,8 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                 </>}
                 {contextVirtual && <button type="button" role="menuitem" disabled={busy}
                     onClick={() => menuAction(() => setDialog({ kind: 'port', port: contextVirtual }))}>Edit MIDI loopback…</button>}
+                {contextVirtual && contextPort && <button type="button" role="menuitem"
+                    onClick={() => menuAction(() => setDialog({ kind: 'monitor', port: contextPort }))}>Monitor incoming MIDI…</button>}
                 {firstSource(contextNode) && <button type="button" role="menuitem"
                     onClick={() => menuAction(() => addWidget(firstSource(contextNode)))}>Add BPM display for this block…</button>}
                 {contextVirtual && <button type="button" role="menuitem" disabled={busy}
@@ -565,5 +600,8 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                 if (target) assignWidget(target.id, portId);
                 else setWidgets(current => [...current, { id: `w${Date.now().toString(36)}${current.length}`, portId }]);
             }} />}
+        {dialog?.kind === 'monitor' && <MidiMonitorDialog api={api} port={dialog.port}
+            baselineSequence={Math.max(0, ...(dialog.port.recentMessages || []).map(message => message.sequence))}
+            onClose={() => setDialog(null)} />}
     </section>;
 }

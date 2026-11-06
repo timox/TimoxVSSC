@@ -635,7 +635,8 @@
         "lastSentUnixMs",
         "activity",
         "clock",
-        "activeSensing"
+        "activeSensing",
+        "recentMessages"
       ],
       "properties": {
         "id": {
@@ -723,20 +724,6 @@
           ],
           "minimum": 0,
           "description": "Number of active endpoint clients when session enumeration is available; null means not enumerated."
-        },
-        "clients": {
-          "type": "array",
-          "description": "Windows MIDI Services sessions currently connected to this endpoint, including the owning process when reported.",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["processId", "processName", "sessionName"],
-            "properties": {
-              "processId": { "type": "integer", "minimum": 0 },
-              "processName": { "type": "string" },
-              "sessionName": { "type": "string" }
-            }
-          }
         },
         "group": {
           "type": "integer",
@@ -892,6 +879,20 @@
                 "integer",
                 "null"
               ]
+            }
+          }
+        },
+        "recentMessages": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "required": ["sequence", "unixMs", "words"],
+            "additionalProperties": false,
+            "properties": {
+              "sequence": { "type": "integer", "minimum": 1 },
+              "unixMs": { "type": "integer" },
+              "words": { "type": "array", "items": { "type": "integer", "minimum": 0, "maximum": 4294967295 }, "minItems": 1, "maxItems": 4 }
             }
           }
         }
