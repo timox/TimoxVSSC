@@ -412,14 +412,14 @@ function App() {
                 ...virtualInputs, ...virtualOutputs],
             profiled,
             sourceGroups: [
-                { id: 'physical-input', label: 'Physical inputs', endpoints: physicalInputs },
-                { id: 'physical-output', label: 'Physical outputs', endpoints: physicalOutputs },
+                { id: 'physical-input', label: 'Physical inputs', endpoints: physicalInputs, alwaysVisible: true },
+                { id: 'physical-output', label: 'Physical outputs', endpoints: physicalOutputs, alwaysVisible: true },
                 { id: 'virtual-input', label: 'Virtual inputs', endpoints: virtualInputs },
                 { id: 'virtual-output', label: 'Virtual outputs', endpoints: virtualOutputs }
             ],
             destinationGroups: [
-                { id: 'physical-input', label: 'Physical inputs', endpoints: physicalInputs },
-                { id: 'physical-output', label: 'Physical outputs', endpoints: physicalOutputs },
+                { id: 'physical-input', label: 'Physical inputs', endpoints: physicalInputs, alwaysVisible: true },
+                { id: 'physical-output', label: 'Physical outputs', endpoints: physicalOutputs, alwaysVisible: true },
                 { id: 'virtual-input', label: 'Virtual inputs', endpoints: virtualInputs },
                 { id: 'virtual-output', label: 'Virtual outputs', endpoints: virtualOutputs }
             ]
