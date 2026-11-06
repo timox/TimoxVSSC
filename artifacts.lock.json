@@ -53,7 +53,7 @@
   ],
   "release": {
     "channel": "alpha",
-    "guiVersion": "0.2.0-alpha.1",
+    "guiVersion": "0.2.0-alpha.2",
     "status": "binary-inputs-verified;runtime-qualification-pending",
     "driver": {
       "repository": "timox/TimoxVasio",
