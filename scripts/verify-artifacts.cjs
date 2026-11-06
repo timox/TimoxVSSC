@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const required = [
+    'artifacts/driver/TimoxVasio.dll',
     'artifacts/backend/TimoxVirtualAsioEngine.exe',
     'artifacts/backend/PwarAsioClient.exe'
 ];
@@ -22,7 +23,7 @@ function verify(root, packaged = false) {
         if (!item?.revision || !/^[a-f0-9]{64}$/.test(item.sha256 || '')) throw new Error(`Unpinned artifact: ${name}`);
         const file = path.join(root, name);
         if (hash(file) !== item.sha256) throw new Error(`Artifact hash mismatch: ${name}`);
-        if (packaged && hash(path.join(root, 'dist/win-unpacked/resources/backend', path.basename(name))) !== item.sha256)
+        if (packaged && name.startsWith('artifacts/backend/') && hash(path.join(root, 'dist/win-unpacked/resources/backend', path.basename(name))) !== item.sha256)
             throw new Error(`Packaged artifact hash mismatch: ${name}`);
     }
     for (const name of ['api/openapi-v1.json', 'api/schemas/api-v1.json']) {

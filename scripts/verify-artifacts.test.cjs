@@ -8,7 +8,7 @@ const { verify } = require('./verify-artifacts.cjs');
 test('packaging refuses unpinned, missing and changed binaries and checks packaged copies', async t => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'vssc-artifacts-'));
     t.after(() => fs.rmSync(root, { recursive: true, force: true }));
-    const artifacts = ['TimoxVirtualAsioEngine.exe', 'PwarAsioClient.exe'].map(name => ({path: `artifacts/backend/${name}`, revision: 'test-revision', sha256: crypto.createHash('sha256').update('fixture').digest('hex')}));
+    const artifacts = ['artifacts/driver/TimoxVasio.dll', 'artifacts/backend/TimoxVirtualAsioEngine.exe', 'artifacts/backend/PwarAsioClient.exe'].map(path => ({path, revision: 'test-revision', sha256: crypto.createHash('sha256').update('fixture').digest('hex')}));
     const schemas = ['api/openapi-v1.json', 'api/schemas/api-v1.json'].map(name => ({path:name, sha256: artifacts[0].sha256}));
     fs.mkdirSync(path.join(root, 'api/schemas'), {recursive:true});
     for(const item of schemas) fs.writeFileSync(path.join(root, item.path), 'fixture');
@@ -16,6 +16,7 @@ test('packaging refuses unpinned, missing and changed binaries and checks packag
     writeLock();
     assert.throws(() => verify(root), /ENOENT/);
     fs.mkdirSync(path.join(root, 'artifacts/backend'), {recursive:true});
+    fs.mkdirSync(path.join(root, 'artifacts/driver'), {recursive:true});
     for(const item of artifacts) fs.writeFileSync(path.join(root, item.path), 'fixture');
     verify(root);
     fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify({ version: '0.2.0-alpha.1' }));

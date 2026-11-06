@@ -2,7 +2,7 @@
 
 This repository owns the Electron/React control interface. Engine, driver and PWAR sources live in their respective repositories. Do not embed paths to the original TimoxVasio checkout.
 
-Before builds, inspect `git rev-parse --show-toplevel` and `git status`. Use the pinned package lock and `artifacts.lock.json`. Packaging must stop on missing or changed engine/PWAR/schema inputs. The preview is portable and must not install/register an ASIO driver.
+Before builds, inspect `git rev-parse --show-toplevel` and `git status`. Use the pinned package lock and `artifacts.lock.json`. Packaging must stop on missing or changed engine/PWAR/schema/driver inputs. The preview uses a real per-machine NSIS install and installs/registers its pinned ASIO driver.
 
 Preserve the explicit API 1.1 requirement, loopback discovery safety, API authentication, and existing `%APPDATA%/timox-vsounddealer` user data and single-instance lock. No automatic preference or secret migration from other profiles.
 

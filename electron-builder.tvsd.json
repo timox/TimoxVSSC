@@ -36,7 +36,7 @@
   },
   "win": {
     "target": [
-      "portable"
+      "nsis"
     ],
     "artifactName": "TimoxVSSC-${version}-preview.${ext}"
   },
