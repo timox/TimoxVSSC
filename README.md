@@ -1,6 +1,6 @@
 # TimoxVSSC
 
-Next development candidate: **0.2.0-alpha.4**, paired with engine
+Next development candidate: **0.2.0-alpha.5**, paired with engine
 **1.3.0-alpha.1** (API **1.1**, MIDI backend enabled). The external ASIO driver
 remains **1.2.7**. See [RELEASE.md](RELEASE.md) and `artifacts.lock.json` for the
 assembly, source revisions and outstanding binary/runtime validation.

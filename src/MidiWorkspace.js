@@ -486,6 +486,7 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
     const contextVirtual = contextNode?.kind === 'application'
         ? configuration.virtualPorts.find(port => port.id === contextNode.resourceId) : null;
     const contextPort = contextVirtual ? portById.get(`midi:virtual:${contextVirtual.id}`) : null;
+    const contextMonitorPort = contextPort || contextNode?.ports.find(port => port.side === 'source')?.portRef || null;
     const firstSource = node => node?.ports.find(port => port.side === 'source')?.id;
 
     const clockSources = Object.values(observations).filter(port => port.clock?.running);
@@ -551,8 +552,8 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
                 </>}
                 {contextVirtual && <button type="button" role="menuitem" disabled={busy}
                     onClick={() => menuAction(() => setDialog({ kind: 'port', port: contextVirtual }))}>Edit MIDI loopback…</button>}
-                {contextVirtual && contextPort && <button type="button" role="menuitem"
-                    onClick={() => menuAction(() => setDialog({ kind: 'monitor', port: contextPort }))}>Monitor incoming MIDI…</button>}
+                {contextMonitorPort && <button type="button" role="menuitem"
+                    onClick={() => menuAction(() => setDialog({ kind: 'monitor', port: contextMonitorPort }))}>Monitor incoming MIDI…</button>}
                 {firstSource(contextNode) && <button type="button" role="menuitem"
                     onClick={() => menuAction(() => addWidget(firstSource(contextNode)))}>Add BPM display for this block…</button>}
                 {contextVirtual && <button type="button" role="menuitem" disabled={busy}

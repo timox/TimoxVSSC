@@ -1,6 +1,6 @@
 {
   "name": "timox-vssc",
-  "version": "0.2.0-alpha.4",
+  "version": "0.2.0-alpha.5",
   "description": "TimoxVSSC control preview",
   "main": "electron/main.js",
   "homepage": "./",
