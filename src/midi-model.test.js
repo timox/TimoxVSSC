@@ -46,6 +46,7 @@ test('formats Windows MIDI Services endpoint capabilities without guessing missi
 test('MIDI loopbacks show only enabled directions and devices group their MIDI 1.0 ports', () => {
     const nodes = buildMidiNodes(midi);
     const app = nodes.find(node => node.id === 'midi-application:bitwig');
+    expect(app.role).toBe('loopback');
     expect(app.ports.map(port => [port.name, port.side])).toEqual([['Bitwig In', 'source']]);
     const device = nodes.find(node => node.id === 'midi-device:usb');
     expect(device.label).toBe('UM-ONE');

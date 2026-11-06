@@ -63,7 +63,7 @@ export function buildMidiNodes(midi) {
                 ports: [{ id: port.id, name: 'Clock out', side: 'source', portRef: port }] });
         } else if (port.kind === 'virtual') {
             const id = port.id.slice(VIRTUAL_PREFIX.length);
-            nodes.push({ id: applicationNodeId(id), kind: 'application', label: port.name || id, resourceId: id,
+            nodes.push({ id: applicationNodeId(id), kind: 'application', role: 'loopback', label: port.name || id, resourceId: id,
                 ports: [
                     ...(port.source ? [{ id: port.id, name: `${port.name} In`, side: 'source', portRef: port }] : []),
                     ...(port.destination ? [{ id: port.id, name: `${port.name} Out`, side: 'destination', portRef: port }] : [])

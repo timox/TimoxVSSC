@@ -365,10 +365,10 @@ export default function MidiWorkspace({ api = typeof window !== 'undefined' ? wi
         <ul>{node.ports.map(renderPort)}</ul>
     </div>;
 
-    const renderNode = node => node.kind === 'engineClock' ? renderEngineClock(node) : <div className={`midi-node ${node.kind}${node.offline ? ' offline' : ''}`}
+    const renderNode = node => node.kind === 'engineClock' ? renderEngineClock(node) : <div className={`midi-node ${node.kind}${node.role ? ` ${node.role}` : ''}${node.offline ? ' offline' : ''}`}
         data-node-id={node.id} aria-label={`${node.kind === 'application' ? 'MIDI loopback' : 'MIDI device'} ${node.label}`}>
         <div className="midi-node-heading"><strong>{node.label}</strong>
-            <small>{node.kind === 'application' ? 'Application' : node.offline ? 'Device · offline' : formatEndpointSummary(node.ports[0]?.portRef)}</small></div>
+            <small>{node.role === 'loopback' ? 'Loopback · Windows MIDI Services' : node.offline ? 'Device · offline' : formatEndpointSummary(node.ports[0]?.portRef)}</small></div>
         <ul>{node.ports.map(renderPort)}</ul>
     </div>;
 
