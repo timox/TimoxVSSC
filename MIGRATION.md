@@ -26,7 +26,7 @@ TimoxVSSC keeps preview version 0.1.0 independently of driver/engine version 1.2
 
 Ruling: explicitly retain `%APPDATA%/timox-vsounddealer` before requesting Electron's single-instance lock. This directory was observed on this workstation. Preferences, browser storage and secrets remain in place; none are copied into this repository. A second launcher using this profile focuses the existing GUI. `%APPDATA%/vasio-control` and `%APPDATA%/timox-vsounddealer-preview5` remain untouched; their separate preferences are not automatically merged. Real application coexistence was not exercised.
 
-The default and compatibility builder configurations produce a portable preview only. Historical installer assets are retained as source provenance but not invoked; old installer/driver packaging PowerShell entrypoints fail with an explicit replacement command. Updated README files are authoritative over imported historical feature guides. No ASIO driver installation is added.
+The default and compatibility builder configurations produce a per-machine NSIS preview installer. The installer bundles the pinned ASIO driver, registers it under the 64-bit ASIO registry, and stops TimoxVSSC clients before install or uninstall. Historical portable/installer assets are retained as source provenance but not invoked. Updated README files are authoritative over imported historical feature guides.
 
 `artifacts.lock.json` pins the included OpenAPI/schema snapshots. Engine and PWAR revisions/hashes now identify fresh sibling builds (see packaging follow-up below). Their intended locations are `artifacts/backend/TimoxVirtualAsioEngine.exe` and `artifacts/backend/PwarAsioClient.exe`. Preflight and the electron-builder beforePack hook fail closed for absent pins/files or mismatched hashes; postflight compares packaged copies, including schema files. The engine launch path uses these local artifacts in development and `process.resourcesPath/backend` when packaged. No runnable source references original build directories.
 
@@ -47,7 +47,7 @@ From staging root:
 
 ## Next steps and limits
 
-Fresh engine/PWAR inputs and matching API snapshots have been verified. Parent integration owns freezing the engine manifest revision after its final metadata update and refreshing manifest hashes. A distributable portable executable via `npm run dist` remains a later step; no signing or installer workflow is implied.
+Fresh engine/PWAR/driver inputs and matching API snapshots have been verified. Parent integration owns freezing the engine manifest revision after its final metadata update and refreshing manifest hashes. `npm run dist` produces the per-machine NSIS installer; signing and hardware qualification remain separate steps.
 
 No Electron UI/audio process, hardware test, visual/responsive inspection, installer, self-extracting portable executable, authentication migration or real multi-GUI coexistence test was launched. Existing React failures remain. The profile choice intentionally shares TVSD data/lock and does not merge the stable control application's separate profile. Engine/PWAR/API packaged copies match their supplied pins; runtime compatibility has not been exercised.
 
